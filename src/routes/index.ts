@@ -1,0 +1,23 @@
+import publicR from "./public.route";
+import install from "./install.route";
+import auth from "./auth.route";
+import transaction from "./transaction.route";
+import user from "./user.route";
+import item from "./item.route";
+import warehouse from "./warehouse.route";
+import adminUsers from "./admin/users.route";
+import adminItem from "./admin/item.route";
+import adminWarehouse from "./admin/warehouse.route";
+import adminTransaction from "./admin/transaction.route";
+
+export { publicR as publicRoute };
+export { install as firstInstallRoute };
+export { auth as authRoute };
+export { transaction as transactionRoute };
+export { user as userRoute };
+export { item as itemRoute };
+export { warehouse as warehouseRoute };
+export { adminUsers as adminUsersRoute };
+export { adminItem as adminItemRoute };
+export { adminWarehouse as adminWarehouseRoute };
+export { adminTransaction as adminTransactionRoute };
