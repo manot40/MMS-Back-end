@@ -15,7 +15,7 @@ let router = Router();
 router.get("/", (_req, res) => {
   res
     .type("html")
-    .setHeader("Content-Security-Policy", "script-src 'self' https://unpkg.com 'unsafe-eval' 'unsafe-inline'")
+    .setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-eval' https://unpkg.com 'unsafe-inline'")
     .sendFile("api.html", options);
 });
 
