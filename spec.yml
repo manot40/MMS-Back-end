@@ -6,10 +6,11 @@ info:
     name: ISC
     url: "https://spdx.org/licenses/ISC"
 servers:
-  - url: "https://mrasm.vercel.app"
+  - description: Production
+    url: "https://jp1.kevinsandiho.cyou/api/mr"
     description: Production
   - description: Development
-    url: "https://node.test"
+    url: "https://api.node.test"
   version: 1.0.0
 paths:
   /admin/role:
