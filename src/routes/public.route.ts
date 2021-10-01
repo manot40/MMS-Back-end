@@ -1,6 +1,10 @@
 import { Router } from "express";
+import path from "path";
 
 // Script
+const options = {
+  root: path.join(process.cwd()),
+};
 
 // Schemas
 
@@ -8,8 +12,15 @@ import { Router } from "express";
 
 let router = Router();
 
-router.get("/", (req, res) => {
-  res.sendStatus(200);
+router.get("/", (_req, res) => {
+  res
+    .type("html")
+    .setHeader("Content-Security-Policy", "script-src 'self' https://unpkg.com")
+    .sendFile("api.html", options);
+});
+
+router.get("/spec.yml", (_req, res) => {
+  res.type("text/yaml").sendFile("spec.yml", options);
 });
 
 export default router;
