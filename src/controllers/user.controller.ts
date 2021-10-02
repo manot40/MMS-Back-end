@@ -5,23 +5,25 @@ import log from "../helpers/pino";
 import msg from "../helpers/messenger";
 
 export async function createUserHandler(req: Request, res: Response) {
-  try {
-    const user = await createUser(req.body);
-    const created = omit(user.toJSON(), "password");
-    return res.send(msg(200, created, null));
-  } catch (err) {
-    log.error(`(Database) ${err}`);
-    return res.status(409).send(msg(409, null, err.message));
-  }
+  await createUser(req.body)
+    .then((data) => {
+      const newUser = omit(data.toJSON(), "password");
+      return res.send(msg(200, newUser));
+    })
+    .catch((err) => {
+      log.error(`(Database) ${err}`);
+      return res.status(409).send(msg(409, {}, err.message));
+    });
 }
 
 export async function getUserInformationHandler(req: Request, res: Response) {
-  try {
-    const id = get(req, "user._id");
-    const user = await findUser({ _id: id }, "-password");
-    return res.send(msg(200, user, null));
-  } catch (err) {
-    log.error(`(Database) ${err}`);
-    return res.status(409).send(msg(409, null, err.message));
-  }
+    const { _id } = get(req, "user");
+    await findUser({ _id }, "-password")
+      .then((data) => {
+        return res.send(msg(200, data));
+      })
+      .catch((err) => {
+        log.error(`(Database) ${err}`);
+        return res.status(409).send(msg(409, null, err.message));
+      });
 }

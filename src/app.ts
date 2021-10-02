@@ -4,12 +4,12 @@ import Server from "./server";
 
 new Server();
 
-process.on("uncaughtException", (error: Error) => {
-  log.error("Uncaught Exception | " + error.message);
+process.on("uncaughtException", (err: Error) => {
+  log.error("Uncaught Exception | " + err.message);
 });
 
-process.on("unhandledRejection", (error: Error) => {
-  log.error("Unhandled Promise Rejection | " + error);
+process.on("unhandledRejection", (err: Error) => {
+  log.error("Unhandled Promise Rejection | " + err);
 });
 
 module.exports = Server;

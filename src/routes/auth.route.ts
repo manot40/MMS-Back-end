@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 // Middleware
-import { validateRequest } from "../middleware";
+import { validateRequest, requireAuth } from "../middleware";
 
 // Schemas
 import { createUserSchema } from "../schemas/user.schema";
@@ -18,7 +18,12 @@ import {
 
 let router = Router();
 
-router.post("/register", validateRequest(createUserSchema), createUserHandler);
+router.post(
+  "/register",
+  requireAuth.admin,
+  validateRequest(createUserSchema),
+  createUserHandler
+);
 router.post(
   "/login",
   validateRequest(createUserSessionSchema),
