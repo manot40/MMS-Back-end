@@ -59,4 +59,7 @@ npm install
 npm run build
 npm start
 ```
-This will create new build folder and start the app.
+
+This will install all dependencies and run the app.
+
+For API Documentation, run the app and open http://localhost:6900 on your browser.
