@@ -15,11 +15,14 @@ let router = Router();
 router.get("/", (_req, res) => {
   res
     .type("html")
-    .setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-eval' https://unpkg.com 'unsafe-inline'")
+    .setHeader(
+      "Content-Security-Policy",
+      "script-src 'self' https://unpkg.com https://cdn.jsdelivr.net data: blob: 'unsafe-eval' 'unsafe-inline'"
+    )
     .sendFile("api.html", options);
 });
 
-router.get("/spec.yml", (_req, res) => {
+router.get("/spec", (_req, res) => {
   res.type("text/yaml").sendFile("spec.yml", options);
 });
 

@@ -27,7 +27,7 @@ const itemSchema = new Schema(
     },
     type: { type: String, required: true, enum: ["chemical", "consumable"] },
     bufferStock: { type: Number, default: 0 },
-    warehouse: [{ type: Schema.Types.ObjectId, ref: "Warehouse" }],
+    warehouse: [{ type: Schema.Types.ObjectId, ref: "Warehouse", required: true }],
     enabled: { type: Boolean, default: true },
   },
   { timestamps: true }

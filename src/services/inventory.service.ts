@@ -16,13 +16,18 @@ export async function checkIfInvExist(query: FilterQuery<InventoryDocument>) {
 
 export function findInventory(
   query: FilterQuery<InventoryDocument>,
-  options: QueryOptions = { lean: true }
+  options: QueryOptions = { lean: true },
+  projection: any = null,
 ) {
-  return Inventory.findOne(query, options);
+  return Inventory.findOne(query, projection, options);
 }
 
-export function getInventories() {
-  return Inventory.find();
+export function getInventories(
+  query: FilterQuery<InventoryDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null,
+) {
+  return Inventory.find(query, projection, options);
 }
 
 export function updateInventory(

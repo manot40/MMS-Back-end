@@ -10,6 +10,10 @@ export function createWarehouse(input: DocumentDefinition<WarehouseDocument>) {
   return Warehouse.create(input);
 }
 
+export function countWarehouses(query?: FilterQuery<WarehouseDocument>) {
+  return Warehouse.countDocuments(query);
+}
+
 export async function checkIfWarehouseExist(
   query: FilterQuery<WarehouseDocument>
 ) {
@@ -18,13 +22,20 @@ export async function checkIfWarehouseExist(
 
 export function findWarehouse(
   query: FilterQuery<WarehouseDocument>,
-  options: QueryOptions = { lean: true }
+  options: QueryOptions = { lean: true },
+  projection: any = null
 ) {
-  return Warehouse.findOne(query, options);
+  return Warehouse.findOne(query, projection, options);
 }
 
-export function getWarehouses() {
-  return Warehouse.find().populate([{ path: "user", select: "name" }]);
+export function getWarehouses(
+  query: FilterQuery<WarehouseDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
+  return Warehouse.find(query, projection, options).populate([
+    { path: "user", select: "name" },
+  ]);
 }
 
 export function updateWarehouse(

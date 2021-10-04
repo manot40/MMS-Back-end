@@ -27,7 +27,7 @@ export function findTransaction(
 }
 
 export function getTransactions(
-  query: FilterQuery<TransactionDocument>,
+  query: FilterQuery<TransactionDocument> = {},
   options: QueryOptions = { lean: true },
   projection: any = null,
   

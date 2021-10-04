@@ -1,8 +1,10 @@
 import { Response, Request } from "express";
+import regexp from "../helpers/escapeRegex";
 import { get } from "lodash";
 import msg from "../helpers/messenger";
 import {
   createWarehouse,
+  countWarehouses,
   updateWarehouse,
   findWarehouse,
   getWarehouses,
@@ -23,9 +25,9 @@ export async function createWarehouseHandler(req: Request, res: Response) {
 }
 
 export async function getWarehouseHandler(req: Request, res: Response) {
-  const param = get(req, "params.warehouseId");
+  const _id = req.params.warehouseId;
 
-  await findWarehouse({ _id: param })
+  await findWarehouse({ _id })
     .then((data) => {
       return res.status(200).send(msg(200, data));
     })
@@ -34,10 +36,37 @@ export async function getWarehouseHandler(req: Request, res: Response) {
     });
 }
 
-export async function getWarehousesHandler(_req: Request, res: Response) {
-  await getWarehouses()
+export async function getWarehousesHandler(req: Request, res: Response) {
+  const query = req.query;
+  let filter = {};
+  let options = {
+    limit: 10,
+    sort: { name: "asc" },
+  };
+
+  if (query.search) {
+    const $regex = new RegExp(regexp(query.search as string), "i");
+    filter = { ...filter, name: { $regex } };
+  }
+  if (query.limit) {
+    // @ts-ignore
+    options.limit = parseInt(query.limit);
+  }
+  if (query.page) {
+    // @ts-ignore
+    options = { ...options, skip: (parseInt(query.page) - 1) * options.limit };
+  }
+  if (query.sort) {
+    // @ts-ignore
+    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
+  }
+  const count = await countWarehouses({ ...filter });
+
+  await getWarehouses({ ...filter }, { ...options })
     .then((data) => {
-      return res.status(200).send(msg(200, data));
+      const response = msg(200, data);
+      const totalPages = Math.ceil(count / options.limit);
+      return res.status(200).send({ ...response, totalPages });
     })
     .catch((err) => {
       return res.status(500).send(msg(500, err.errors, err._message));

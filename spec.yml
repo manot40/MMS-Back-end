@@ -15,11 +15,11 @@ info:
     \n\n This API Documented using OpenAPI 3.0.
     \n\n ## 🔨 Setup
     \n\n This app use express to run the web server, and mongoose (MongoDB) for model data mapping, which would need to set up node.js environment.
-    \n\n ## Requirments
+    \n\n ### Requirments
     \n\n - Computer with Windows 10 or Linux
     \n\n - Node.js 14 or greater
     \n\n - MongoDB [Atlas instance](https://mongodb.com/cloud/atlas)
-    \n\n ## Configuration
+    \n\n ### Configuration
     \n\n 1. Clone this repository, enter project directory
     \n\n 2. Rename `.env.example` file to `.env`
     \n\n 3. Open the `.env` file and customize the configuration
@@ -63,7 +63,7 @@ info:
     url: "https://spdx.org/licenses/ISC"
 
 servers:
-  - description: Server 1
+  - description: Server
     url: "/"
 
 paths:
@@ -93,7 +93,33 @@ paths:
                   success:
                     type: boolean
                   data:
-                    $ref: "#/components/schemas/User"
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Auto-generated unique BSON IDs
+                        readOnly: true
+                      username:
+                        type: string
+                        description: Username for user login credentials (Must unique)
+                      name:
+                        type: string
+                        description: User real full name
+                      role:
+                        type: string
+                        description: List of allowed node
+                        default: user
+                      affiliation:
+                        type: string
+                        description: User vendor affiliation
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Time when this object was created
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Time when this object was updated
                   message:
                     type: string
         400:
@@ -191,6 +217,278 @@ paths:
           $ref: "#/components/responses/401"
         500:
           $ref: "#/components/responses/500"
+  /warehouse:
+    get:
+      tags:
+        - Warehouse
+      summary: Fetch Warehouses List
+      description: "Get list of available warehouses, you can use query parameter to specify data querying rule"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/By"
+      responses:
+        200:
+          description: Action completed successfully, warehouse(s) data will shown to user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Warehouse"
+                  totalPages:
+                    description: Total available rest of pages
+                    type: number
+                  message:
+                    type: string
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+  "/warehouse/{id}":
+    get:
+      tags:
+        - Warehouse
+      summary: Fetch Warehouse Data
+      description: "Get warehouse data by specifying warehouse BSON id"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          $ref: "#/components/responses/Warehouse"
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /admin/warehouse:
+    post:
+      tags:
+        - Warehouse
+      summary: Create New Warehouse
+      description: "Create New Warehouse Data, providing warehouse information in document body \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      requestBody:
+        description: New Warehouse Information
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Warehouse"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/Warehouse"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        500:
+          $ref: "#/components/responses/500"
+  "/admin/warehouse/{id}":
+    put:
+      tags:
+        - Warehouse
+      summary: Update Warehouse Data
+      description: "Update existing Warehouse Data, providing warehouse information in document body \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      requestBody:
+        description: New Warehouse Information
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Warehouse"
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/Warehouse"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Warehouse
+      summary: Delete Warehouse Data
+      description: "Delete existing Warehouse Data, providing warehouse id in path \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          description: Warehouse successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseSuccess"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /item:
+    get:
+      tags:
+        - Item
+      summary: Fetch Items List
+      description: "Get list of available items, you can use query parameter to specify data querying rule"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/Warehouse"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/By"
+      responses:
+        200:
+          $ref: "#/components/responses/Items"
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+  "/item/{id}":
+    get:
+      tags:
+        - Item
+      summary: Fetch Item Data
+      description: "Get item data by specifying warehouse BSON id"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          $ref: "#/components/responses/Item"
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /admin/item:
+    post:
+      tags:
+        - Item
+      summary: Create New Item
+      description: "Create New Item Data, providing Item information in document body \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/Item"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        500:
+          $ref: "#/components/responses/500"
+  /admin/item/batch:
+    post:
+      tags:
+        - Item
+      summary: Create Batch of new Items
+      description: "Create Batch of new Items Data, providing Items information in document body as array \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ItemRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/Items"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        500:
+          $ref: "#/components/responses/500"
+  "/admin/item/{id}":
+    put:
+      tags:
+        - Item
+      summary: Update Item Data
+      description: "Update existing Item Data, providing Item information in document body \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/Item"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Item
+      summary: Delete Item Data
+      description: "Delete existing Item Data, providing Item id in path \n\n (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          description: Item successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseSuccess"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
 
 components:
   schemas:
@@ -228,116 +526,333 @@ components:
         createdAt:
           type: string
           format: date-time
-          description: Time when the task was created
+          description: Time when this object was created
           readOnly: true
         updatedAt:
           type: string
           format: date-time
-          description: Time when the task was updated
+          description: Time when this object was updated
           readOnly: true
+    Warehouse:
+      required:
+        - name
+        - address
+        - enabled
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Auto-generated unique BSON IDs
+          readOnly: true
+        name:
+          type: string
+          description: Warehouse name
+        address:
+          type: string
+          description: Warehouse location address
+        user:
+          description: Last User who modified this object
+          type: object
+          readOnly: true
+          properties:
+            _id:
+              description: User unique BSON ID
+              type: string
+            name:
+              description: User fullname
+              type: string
+        currPeriod:
+          type: string
+          format: date-time
+          description: Current warehouse accounting period
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Time when this object was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Time when this object was updated
+          readOnly: true
+    Item:
+      required:
+        - name
+        - unit
+        - type
+        - warehouse
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Auto-generated unique BSON IDs
+          readOnly: true
+        name:
+          type: string
+          description: Item name
+        sku:
+          type: string
+          description: Item unique SKU code
+        user:
+          type: object
+          description: Last User who modified this object
+          readOnly: true
+          properties:
+            _id:
+              description: User unique BSON ID
+              type: string
+            name:
+              description: User fullname
+              type: string
+        unit:
+          type: string
+          description: Item unit of measurement
+          enum:
+            - PCS
+            - KG
+            - LTR
+            - BTL
+            - SET
+            - PSG
+            - MTR
+            - GLN
+        type:
+          description: Item type
+          type: string
+          enum:
+            - chemical
+            - consumable
+        bufferStock:
+          description: Item safe buffer stock quantity
+          type: number
+          default: 0
+        warehouse:
+          type: array
+          description: Item warehouse BSON Id
+          items:
+            type: object
+            properties:
+              _id:
+                description: Warehouse unique BSON ID
+                type: string
+              name:
+                description: Warehouse name
+                type: string
+        createdAt:
+          type: string
+          format: date-time
+          description: Time when this object was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Time when this object was updated
+          readOnly: true
+    ItemRequest:
+      required:
+        - name
+        - unit
+        - type
+        - warehouse
+      type: object
+      properties:
+        name:
+          type: string
+          description: Item name
+        sku:
+          type: string
+          description: Item unique SKU code
+        unit:
+          type: string
+          description: Item unit of measurement
+          enum:
+            - PCS
+            - KG
+            - LTR
+            - BTL
+            - SET
+            - PSG
+            - MTR
+            - GLN
+        type:
+          description: Item type
+          type: string
+          enum:
+            - chemical
+            - consumable
+        bufferStock:
+          description: Item safe buffer stock quantity
+          type: number
+          default: 0
+        warehouse:
+          type: array
+          description: Item warehouse BSON Id
+          items:
+            type: string
+    ResponseError:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+          readOnly: true
+        message:
+          type: string
+          description: Message containing possible errors cause
+          readOnly: true
+        errors:
+          type: object
+          description: Object containing stacktrace errors
+          readOnly: true
+    ResponseSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+          readOnly: true
+        data:
+          type: object
+          description: Object containing requested data
+          readOnly: true
+        message:
+          type: string
+          description: Message containing additional information
+          readOnly: true
+
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  
+  parameters:
+    ID:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: BSON ID of the Object
+    Search:
+      in: query
+      name: search
+      description: Filter items by name criteria
+      schema:
+        type: string
+    Sort:
+      in: query
+      name: sort
+      description: Sort by specified data field
+      schema:
+        type: string
+    By:
+      in: query
+      name: sortby
+      description: Sort ascending/descending?
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+    Limit:
+      in: query
+      name: limit
+      description: Limit fetch items in query
+      schema:
+        type: number
+    Page:
+      in: query
+      name: page
+      description: For pagination, specify current user page.
+      schema:
+        type: number
+    Warehouse:
+      in: query
+      name: warehouse
+      description: Fetch item by warehouse relation of item.
+      schema:
+        type: string
 
   responses:
+    Warehouse:
+      description: Action completed successfully, warehouse(s) data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: "#/components/schemas/Warehouse"
+              message:
+                type: string
+    Item:
+      description: Action completed successfully, item data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: "#/components/schemas/Item"
+              message:
+                type: string
+    Items:
+      description: Action completed successfully, items data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+              totalPages:
+                description: Total available rest of pages
+                type: number
+              message:
+                type: string
     400:
       description: "User Input not Accepted, caused by Invalid input"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: false
-              message:
-                type: string
-                description: Message containing about invalid user input
-              errors:
-                type: object
-                description: Object containing stacktrace errors
-            required:
-              - success
-              - message
-              - errors
+            $ref: "#/components/schemas/ResponseError"
     401:
       description: "User access not authorized, caused by missing token header or invalid login information"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: false
-              message:
-                type: string
-                description: Message about user didn't have valid login information
-              errors:
-                type: object
-                description: Object containing stacktrace errors
-            required:
-              - success
-              - message
-              - errors
+            $ref: "#/components/schemas/ResponseError"
     403:
       description: "User access forbidden, caused by user didn't satisfy required role"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: false
-              message:
-                type: string
-                description: Message about user didn't have required access level
-              errors:
-                type: object
-                description: Object containing stacktrace errors
-            required:
-              - success
-              - message
-              - errors
+            $ref: "#/components/schemas/ResponseError"
+    404:
+      description: "Requested object not found, caused by unknown user requested entity"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
     409:
       description: "Object cannot be created or accessed, caused by conflicting user input with target entity"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: false
-              message:
-                type: string
-                description: Message about conflicting user input
-              errors:
-                type: object
-                description: Object containing stacktrace errors
-            required:
-              - success
-              - message
-              - errors
+            $ref: "#/components/schemas/ResponseError"
     500:
       description: "Server cannot handling this request at this moment, caused by server down or other unspecified reason(s)"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: false
-              message:
-                type: string
-              errors:
-                type: object
-                description: Object containing stacktrace errors
-            required:
-              - success
-              - message
-              - errors
+            $ref: "#/components/schemas/ResponseError"
