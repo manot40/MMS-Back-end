@@ -402,9 +402,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: "#/components/schemas/Item"
-                - $ref: "#/components/schemas/WarehousesID"
+              $ref: "#/components/schemas/Item"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -431,9 +429,7 @@ paths:
                 items:
                   type: array
                   items:
-                    allOf:
-                      - $ref: "#/components/schemas/Item"
-                      - $ref: "#/components/schemas/WarehousesID"
+                    $ref: "#/components/schemas/Item"
       responses:
         200:
           $ref: "#/components/responses/Items"
@@ -457,9 +453,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: "#/components/schemas/Item"
-                - $ref: "#/components/schemas/WarehousesID"
+              $ref: "#/components/schemas/Item"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -526,10 +520,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: "#/components/schemas/Transaction"
-                - $ref: "#/components/schemas/WarehouseID"
-                - $ref: "#/components/schemas/TransactionItems"
+              $ref: "#/components/schemas/Transaction"
       responses:
         200:
           $ref: "#/components/responses/Transaction"
@@ -571,10 +562,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: "#/components/schemas/Transaction"
-                - $ref: "#/components/schemas/WarehouseID"
-                - $ref: "#/components/schemas/TransactionItems"
+              $ref: "#/components/schemas/Transaction"
       responses:
         200:
           $ref: "#/components/responses/Transaction"
@@ -774,18 +762,23 @@ components:
           type: number
           default: 0
         warehouse:
-          type: array
-          description: Item warehouse Object ID
-          readOnly: true
-          items:
-            type: object
-            properties:
-              _id:
-                description: Warehouse unique Object ID
+          oneOf:
+            - type: array
+              description: Item warehouse Object ID
+              items:
                 type: string
-              name:
-                description: Warehouse name
-                type: string
+            - type: array
+              description: Item warehouse Object ID
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  _id:
+                    description: Warehouse unique Object ID
+                    type: string
+                  name:
+                    description: Warehouse name
+                    type: string
         createdAt:
           type: string
           format: date-time
@@ -798,9 +791,8 @@ components:
           readOnly: true
     Transaction:
       required:
-        - warehouse
         - txDate
-        - items
+        - warehouse
       type: object
       properties:
         _id:
@@ -846,16 +838,53 @@ components:
             - posted
             - closed
         warehouse:
-          type: object
-          description: Item warehouse Object ID
-          readOnly: true
-          properties:
-            _id:
-              description: Warehouse unique Object ID
-              type: string
-            name:
-              description: Warehouse name
-              type: string
+          oneOf:
+            - type: string
+              description: Item warehouse Object ID
+            - type: object
+              description: Item warehouse Object ID
+              readOnly: true
+              properties:
+                _id:
+                  description: Warehouse unique Object ID
+                  type: string
+                name:
+                  description: Warehouse name
+                  type: string
+        items:
+          oneOf:
+            - type: array
+              description: List of items in this transaction
+              items:
+                required:
+                  - item
+                  - quantity
+                type: object
+                properties:
+                  item:
+                    description: Item unique Object ID
+                    type: string
+                  quantity:
+                    description: Item quantity
+                    type: number
+            - type: array
+              readOnly: true
+              description: List of items in this transaction
+              items:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Item unique Object ID
+                      name:
+                        type: string
+                        description: Item name
+                  quantity:
+                    description: Item quantity
+                    type: number
         createdAt:
           type: string
           format: date-time
@@ -866,66 +895,6 @@ components:
           format: date-time
           description: Time when this object was updated
           readOnly: true
-    WarehouseID:
-      type: object
-      required:
-        - warehouse
-      properties:
-        warehouse:
-          description: Item warehouse Object ID
-          type: string
-    WarehousesID:
-      type: object
-      required:
-        - warehouse
-      properties:
-        warehouse:
-          description: Item warehouse Object ID
-          type: array
-          items:
-            type: string
-    TransactionItems:
-      type: object
-      required:
-        - items
-      properties:
-        items:
-          description: List of items in this transaction
-          type: array
-          items:
-            required:
-              - item
-              - quantity
-            type: object
-            properties:
-              item:
-                description: Item unique Object ID
-                type: string
-              quantity:
-                description: Item quantity
-                type: number
-    TransactionItemsPopulated:
-      type: object
-      properties:
-        items:
-          readOnly: true
-          description: List of items in this transaction
-          type: array
-          items:
-            type: object
-            properties:
-              item:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    description: Item unique Object ID
-                  name:
-                    type: string
-                    description: Item name
-              quantity:
-                description: Item quantity
-                type: number
     ResponseError:
       type: object
       properties:
@@ -1082,9 +1051,7 @@ components:
               success:
                 type: boolean
               data:
-                allOf:
-                  - $ref: "#/components/schemas/Transaction"
-                  - $ref: "#/components/schemas/TransactionItemsPopulated"
+                $ref: "#/components/schemas/Transaction"
               message:
                 type: string
     Transactions:
@@ -1099,9 +1066,7 @@ components:
               data:
                 type: array
                 items:
-                  allOf:
-                    - $ref: "#/components/schemas/Transaction"
-                    - $ref: "#/components/schemas/TransactionItemsPopulated"
+                  $ref: "#/components/schemas/Transaction"
               totalPages:
                 description: Total available rest of pages
                 type: number
