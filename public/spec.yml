@@ -97,7 +97,7 @@ paths:
                     properties:
                       _id:
                         type: string
-                        description: Auto-generated unique BSON IDs
+                        description: Auto-generated unique Object IDs
                         readOnly: true
                       username:
                         type: string
@@ -259,7 +259,7 @@ paths:
       tags:
         - Warehouse
       summary: Fetch Warehouse Data
-      description: "Get warehouse data by specifying warehouse BSON id"
+      description: "Get warehouse data by specifying warehouse Object ID"
       security:
        - bearerAuth: []
       parameters:
@@ -376,7 +376,7 @@ paths:
       tags:
         - Item
       summary: Fetch Item Data
-      description: "Get item data by specifying warehouse BSON id"
+      description: "Get item data by specifying warehouse Object ID"
       security:
        - bearerAuth: []
       parameters:
@@ -404,7 +404,7 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/Item"
-                - $ref: "#/components/schemas/WarehouseID"
+                - $ref: "#/components/schemas/WarehousesID"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -433,7 +433,7 @@ paths:
                   items:
                     allOf:
                       - $ref: "#/components/schemas/Item"
-                      - $ref: "#/components/schemas/WarehouseID"
+                      - $ref: "#/components/schemas/WarehousesID"
       responses:
         200:
           $ref: "#/components/responses/Items"
@@ -459,7 +459,7 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/Item"
-                - $ref: "#/components/schemas/WarehouseID"
+                - $ref: "#/components/schemas/WarehousesID"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -495,6 +495,146 @@ paths:
           $ref: "#/components/responses/404"
         500:
           $ref: "#/components/responses/500"
+  /transaction:
+    get:
+      tags:
+        - Transaction
+      summary: Fetch Transactions List
+      description: "Get list of available Transactions, you can use query parameter to specify data querying rule"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/By"
+      responses:
+        200:
+          $ref: "#/components/responses/Transactions"
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+    post:
+      tags:
+        - Transaction
+      summary: Create New Transaction
+      description: "Create New Transaction Data, providing Transaction information in document body"
+      security:
+       - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Transaction"
+                - $ref: "#/components/schemas/WarehouseID"
+                - $ref: "#/components/schemas/TransactionItems"
+      responses:
+        200:
+          $ref: "#/components/responses/Transaction"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        500:
+          $ref: "#/components/responses/500"
+  "/transaction/{id}":
+    get:
+      tags:
+        - Transaction
+      summary: Fetch Transaction Data
+      description: "Get Transaction data by specifying transaction Object ID"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          $ref: "#/components/responses/Transaction"
+        401:
+          $ref: "#/components/responses/401"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Transaction
+      summary: Update Transaction Data
+      description: "Update existing Transaction Data, providing Transaction information in document body \n\n (**Only draft transaction can be udpated!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Transaction"
+                - $ref: "#/components/schemas/WarehouseID"
+                - $ref: "#/components/schemas/TransactionItems"
+      responses:
+        200:
+          $ref: "#/components/responses/Transaction"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Transaction
+      summary: Delete Transaction Data
+      description: "Delete existing Transaction Data, providing Transaction id in path \n\n (**Only draft transaction can be deleted!**)"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ID"
+      responses:
+        200:
+          description: Transaction successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseSuccess"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /transaction/export:
+    get:
+      tags:
+        - Transaction
+      summary: Export Transaction Report
+      description: "Download transaction report (xlsx format) of specific range of time"
+      security:
+       - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/startDate"
+        - $ref: "#/components/parameters/endDate"
+      responses:
+        200:
+          description: Report file will be send to client
+          content:
+            application/vnd.openxmlformats:
+              schema:
+                type: string
+                format: binary
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        500:
+          $ref: "#/components/responses/500"
 
 components:
   schemas:
@@ -508,7 +648,7 @@ components:
       properties:
         _id:
           type: string
-          description: Auto-generated unique BSON IDs
+          description: Auto-generated unique Object IDs
           readOnly: true
         username:
           type: string
@@ -548,7 +688,7 @@ components:
       properties:
         _id:
           type: string
-          description: Auto-generated unique BSON IDs
+          description: Auto-generated unique Object IDs
           readOnly: true
         name:
           type: string
@@ -562,7 +702,7 @@ components:
           readOnly: true
           properties:
             _id:
-              description: User unique BSON ID
+              description: User unique Object ID
               type: string
             name:
               description: User fullname
@@ -592,7 +732,7 @@ components:
       properties:
         _id:
           type: string
-          description: Auto-generated unique BSON IDs
+          description: Auto-generated unique Object IDs
           readOnly: true
         name:
           type: string
@@ -606,7 +746,7 @@ components:
           readOnly: true
           properties:
             _id:
-              description: User unique BSON ID
+              description: User unique Object ID
               type: string
             name:
               description: User fullname
@@ -635,17 +775,76 @@ components:
           default: 0
         warehouse:
           type: array
-          description: Item warehouse BSON Id
+          description: Item warehouse Object ID
           readOnly: true
           items:
             type: object
             properties:
               _id:
-                description: Warehouse unique BSON ID
+                description: Warehouse unique Object ID
                 type: string
               name:
                 description: Warehouse name
                 type: string
+        createdAt:
+          type: string
+          format: date-time
+          description: Time when this object was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Time when this object was updated
+          readOnly: true
+    Transaction:
+      required:
+        - warehouse
+        - txDate
+        - items
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Auto-generated unique Object IDs
+          readOnly: true
+        user:
+          type: object
+          description: Last User who modified this object
+          readOnly: true
+          properties:
+            _id:
+              description: User unique Object ID
+              type: string
+            name:
+              description: User fullname
+              type: string
+        txId:
+          type: string
+          description: Transaction unique ID
+          readOnly: true
+        txDate:
+          type: string
+          format: date
+          description: Time when this transaction done
+        description:
+          type: string
+          description: Additional transaction info
+        type:
+          type: string
+          description: Transaction type
+          default: out
+          enum:
+            - in
+            - out
+        status:
+          description: Transaction status
+          type: string
+          default: draft
+          readOnly: true
+          enum:
+            - draft
+            - posted
+            - closed
         createdAt:
           type: string
           format: date-time
@@ -662,10 +861,60 @@ components:
         - warehouse
       properties:
         warehouse:
-          description: Item warehouse BSON Id
+          description: Item warehouse Object ID
+          type: string
+    WarehousesID:
+      type: object
+      required:
+        - warehouse
+      properties:
+        warehouse:
+          description: Item warehouse Object ID
           type: array
           items:
-              type: string
+            type: string
+    TransactionItems:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          description: List of items in this transaction
+          type: array
+          items:
+            required:
+              - item
+              - quantity
+            type: object
+            properties:
+              item:
+                description: Item unique Object ID
+                type: string
+              quantity:
+                description: Item quantity
+                type: number
+    TransactionItemsPopulated:
+      type: object
+      properties:
+        items:
+          readOnly: true
+          description: List of items in this transaction
+          type: array
+          items:
+            type: object
+            properties:
+              item:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Item unique Object ID
+                  name:
+                    type: string
+                    description: Item name
+              quantity:
+                description: Item quantity
+                type: number
     ResponseError:
       type: object
       properties:
@@ -710,7 +959,7 @@ components:
       required: true
       schema:
         type: string
-      description: BSON ID of the Object
+      description: Object ID of the Object
     Search:
       in: query
       name: search
@@ -750,6 +999,22 @@ components:
       description: Fetch item by warehouse relation of item.
       schema:
         type: string
+    startDate:
+      in: query
+      name: startDate
+      description: Specify start date of time range.
+      schema:
+        type: string
+        format: date
+      example: "2020-12-01"
+    endDate:
+      in: query
+      name: endDate
+      description: Specify end date of time range.
+      schema:
+        type: string
+        format: date
+      example: "2020-12-31"
 
   responses:
     Warehouse:
@@ -791,6 +1056,41 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/Item"
+              totalPages:
+                description: Total available rest of pages
+                type: number
+              message:
+                type: string
+    Transaction:
+      description: Action completed successfully, transaction data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                allOf:
+                  - $ref: "#/components/schemas/Transaction"
+                  - $ref: "#/components/schemas/TransactionItemsPopulated"
+              message:
+                type: string
+    Transactions:
+      description: Action completed successfully, transactions data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/Transaction"
+                    - $ref: "#/components/schemas/TransactionItemsPopulated"
               totalPages:
                 description: Total available rest of pages
                 type: number
