@@ -608,6 +608,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/startDate"
         - $ref: "#/components/parameters/endDate"
+        - $ref: "#/components/parameters/Warehouse"
       responses:
         200:
           description: Report file will be send to client
@@ -975,7 +976,7 @@ components:
     Warehouse:
       in: query
       name: warehouse
-      description: Fetch item by warehouse relation of item.
+      description: Fetch item based from warehouse by providing warehouse ObjectID.
       schema:
         type: string
     startDate:
