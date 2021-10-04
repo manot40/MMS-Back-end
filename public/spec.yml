@@ -3,61 +3,60 @@ openapi: 3.0.0
 info:
   version: 0.1.8
   title: MR Management System
-  description: "
-    \n\n ## 🚀 Introduction
-    \n\n MMS is an application that provides API logic for simple warehouse stock management with ease. Some key features:
-    \n\n - Role based access
-    \n\n - Transaction assessment
-    \n\n - Monthly stock opname reporting
-    \n\n - Empty stock reminder
-    \n\n - Deployable to serverless
-    \n\n - ...and much still in development
-    \n\n This API Documented using OpenAPI 3.0.
-    \n\n ## 🔨 Setup
-    \n\n This app use express to run the web server, and mongoose (MongoDB) for model data mapping, which would need to set up node.js environment.
-    \n\n ### Requirments
-    \n\n - Computer with Windows 10 or Linux
-    \n\n - Node.js 14 or greater
-    \n\n - MongoDB [Atlas instance](https://mongodb.com/cloud/atlas)
-    \n\n ### Configuration
-    \n\n 1. Clone this repository, enter project directory
-    \n\n 2. Rename `.env.example` file to `.env`
-    \n\n 3. Open the `.env` file and customize the configuration
-    \n\n The configuration consist of:
-    \n\n ```
-    \n\n # Application Configuration
-    \n SVR_PORT        // Default app listen port
-    \n CLUSTER         // Set to true to use nodejs multithread feature
-    \n THREAD_LIMIT    // Adjust maximum cluster thread limit
-    \n 
-    \n\n # Database Configuration
-    \n DB_HOST         // Database namehost
-    \n DB_NAME         // Database name
-    \n DB_USERNAME     // Database access username
-    \n DB_PASSWORD     // Database access password
-    \n 
-    \n\n # CORS Configurations
-    \n CORS_WHITELIST  // Provide whitelist site (separate with semicolons ';')
-    \n 
-    \n\n # JsonWebToken Configuration (JWT)
-    \n JWT_ACCESSTOKEN_TTL     // JWT expiry time, use 'ms' format (https://github.com/vercel/ms)
-    \n JWT_REFRESHTOKEN_TTL    // JWT refresh expiry time, use 'ms' format
-    \n JWT_PRIVATE_KEY         // Specify private key to encrypt JWT token
-    \n\n ```
-    \n\n ### Installation
-    \n\n Open terminal in project directory, and enter this command for development env:
-    \n\n ```
-    \n npm install
-    \n npm run dev
-    \n\n ```
-    \n\n For production environment, instead use this command:
-    \n\n ```
-    \n npm install
-    \n npm run build
-    \n npm start
-    \n\n ```
-    \n\n This will install all dependencies and run the app.
-    "
+  description: |-
+    ## 🚀 Introduction
+    MMS is an application that provides API logic for simple warehouse stock management with ease. Some key features:
+    - Role based access
+    - Transaction assessment
+    - Monthly stock opname reporting
+    - Empty stock reminder
+    - Deployable to serverless
+    - ...and much still in development
+    This API Documented using OpenAPI 3.0.
+    ## 🔨 Setup
+    This app use express to run the web server, and mongoose (MongoDB) for model data mapping, which would need to set up node.js environment.
+    ### Requirments
+    - Computer with Windows 10 or Linux
+    - Node.js 14 or greater
+    - MongoDB [Atlas instance](https://mongodb.com/cloud/atlas)
+    ### Configuration
+    1. Clone this repository, enter project directory
+    2. Rename `.env.example` file to `.env`
+    3. Open the `.env` file and customize the configuration
+    The configuration consist of:
+    ```
+    # Application Configuration
+    SVR_PORT        // Default app listen port
+    CLUSTER         // Set to true to use nodejs multithread feature
+    THREAD_LIMIT    // Adjust maximum cluster thread limit
+    
+    # Database Configuration
+    DB_HOST         // Database namehost
+    DB_NAME         // Database name
+    DB_USERNAME     // Database access username
+    DB_PASSWORD     // Database access password
+    
+    # CORS Configurations
+    CORS_WHITELIST  // Provide whitelist site (separate with semicolons ';')
+    
+    # JsonWebToken Configuration (JWT)
+    JWT_ACCESSTOKEN_TTL     // JWT expiry time, use 'ms' format (https://github.com/vercel/ms)
+    JWT_REFRESHTOKEN_TTL    // JWT refresh expiry time, use 'ms' format
+    JWT_PRIVATE_KEY         // Specify private key to encrypt JWT token
+    ```
+    ### Installation
+    Open terminal in project directory, and enter this command for development env:
+    ```
+    npm install
+    npm run dev
+    ```
+    For production environment, instead use this command:
+    ```
+    npm install
+    npm run build
+    npm start
+    ```
+    This will install all dependencies and run the app.
   license:
     name: ISC
     url: "https://spdx.org/licenses/ISC"
@@ -72,7 +71,7 @@ paths:
       tags:
         - Authentication
       summary: New User Registration
-      description: "Registering new user, providing basic user information in request body \n\n (**Admin Role Required!**)"
+      description: "Registering new user, providing basic user information in request body  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       requestBody:
@@ -156,7 +155,7 @@ paths:
                   description: User password credentials
                 rememberMe:
                   type: boolean
-                  description: "Boolean indicating if user want their login to be remembered.\n\n(*When 'false' provided, server will returning 'accessToken' value in 'refreshToken' field instead*)"
+                  description: "Boolean indicating if user want their login to be remembered.(*When 'false' provided, server will returning 'accessToken' value in 'refreshToken' field instead*)"
         required: true
       responses:
         200:
@@ -278,7 +277,7 @@ paths:
       tags:
         - Warehouse
       summary: Create New Warehouse
-      description: "Create New Warehouse Data, providing warehouse information in document body \n\n (**Admin Role Required!**)"
+      description: "Create New Warehouse Data, providing warehouse information in document body  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       requestBody:
@@ -302,7 +301,7 @@ paths:
       tags:
         - Warehouse
       summary: Update Warehouse Data
-      description: "Update existing Warehouse Data, providing warehouse information in document body \n\n (**Admin Role Required!**)"
+      description: "Update existing Warehouse Data, providing warehouse information in document body  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       parameters:
@@ -329,7 +328,7 @@ paths:
       tags:
         - Warehouse
       summary: Delete Warehouse Data
-      description: "Delete existing Warehouse Data, providing warehouse id in path \n\n (**Admin Role Required!**)"
+      description: "Delete existing Warehouse Data, providing warehouse id in path  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       parameters:
@@ -395,7 +394,7 @@ paths:
       tags:
         - Item
       summary: Create New Item
-      description: "Create New Item Data, providing Item information in document body \n\n (**Admin Role Required!**)"
+      description: "Create New Item Data, providing Item information in document body  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       requestBody:
@@ -417,7 +416,7 @@ paths:
       tags:
         - Item
       summary: Create Batch of new Items
-      description: "Create Batch of new Items Data, providing Items information in document body as array \n\n (**Admin Role Required!**)"
+      description: "Create Batch of new Items Data, providing Items information in document body as array  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       requestBody:
@@ -444,7 +443,7 @@ paths:
       tags:
         - Item
       summary: Update Item Data
-      description: "Update existing Item Data, providing Item information in document body \n\n (**Admin Role Required!**)"
+      description: "Update existing Item Data, providing Item information in document body  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       parameters:
@@ -469,7 +468,7 @@ paths:
       tags:
         - Item
       summary: Delete Item Data
-      description: "Delete existing Item Data, providing Item id in path \n\n (**Admin Role Required!**)"
+      description: "Delete existing Item Data, providing Item id in path  (**Admin Role Required!**)"
       security:
        - bearerAuth: []
       parameters:
@@ -553,7 +552,7 @@ paths:
       tags:
         - Transaction
       summary: Update Transaction Data
-      description: "Update existing Transaction Data, providing Transaction information in document body \n\n (**Only draft transaction can be udpated!**)"
+      description: "Update existing Transaction Data, providing Transaction information in document body  (**Only draft transaction can be udpated!**)"
       security:
        - bearerAuth: []
       parameters:
@@ -578,7 +577,7 @@ paths:
       tags:
         - Transaction
       summary: Delete Transaction Data
-      description: "Delete existing Transaction Data, providing Transaction id in path \n\n (**Only draft transaction can be deleted!**)"
+      description: "Delete existing Transaction Data, providing Transaction id in path  (**Only draft transaction can be deleted!**)"
       security:
        - bearerAuth: []
       parameters:
