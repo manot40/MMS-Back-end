@@ -845,6 +845,19 @@ components:
             - draft
             - posted
             - closed
+        warehouse:
+          type: array
+          description: Item warehouse Object ID
+          readOnly: true
+          items:
+            type: object
+            properties:
+              _id:
+                description: Warehouse unique Object ID
+                type: string
+              name:
+                description: Warehouse name
+                type: string
         createdAt:
           type: string
           format: date-time
