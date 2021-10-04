@@ -1,13 +1,12 @@
 // External dependencies
-const cluster = require("cluster");
-const totalCpuThread = require("os").cpus().length;
-var rfs = require("rotating-file-stream");
 import express, { urlencoded, json } from "express";
 import cors from "cors";
-import compression from "compression";
 import morgan from "morgan";
 import helmet from "helmet";
 import http from "http";
+import path from "path";
+import serveIndex from "serve-index";
+import compression from "compression";
 
 // Custom scripts and helpers
 import config from "../config/app";
@@ -15,6 +14,9 @@ import corsConfig from "../config/cors";
 import log from "../helpers/pino";
 import db from "./db";
 import { validateJWT, requireAuth } from "../middleware";
+const cluster = require("cluster");
+const totalCpuThread = require("os").cpus().length;
+var rfs = require("rotating-file-stream");
 
 // Routes
 import {
@@ -109,17 +111,20 @@ export default class Server {
   }
 
   private configureDefaultMiddlewares() {
+    const rootPath = path.join(process.cwd());
+    const accessLogStream = rfs.createStream("access.log", {
+      size: "2M",
+      interval: "1d",
+      path: "logs",
+    });
     this.app.use(helmet());
     this.app.use(cors(corsConfig));
     this.app.use(compression());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(json());
     this.app.use(validateJWT);
-    const accessLogStream = rfs.createStream("access.log", {
-      size: "2M",
-      interval: "1d",
-      path: "logs",
-    });
+    this.app.use(express.static(rootPath + "/"));
+    this.app.use("/public", serveIndex(rootPath + "/public"));
     this.app.use(
       morgan(
         ':status ":method :url" [:date[web]] ":user-agent"  :response-time ms',

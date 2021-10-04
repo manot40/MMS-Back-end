@@ -22,8 +22,4 @@ router.get("/", (_req, res) => {
     .sendFile("api.html", options);
 });
 
-router.get("/spec", (_req, res) => {
-  res.type("text/yaml").sendFile("spec.yml", options);
-});
-
 export default router;
