@@ -402,7 +402,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ItemRequest"
+              allOf:
+                - $ref: "#/components/schemas/Item"
+                - $ref: "#/components/schemas/WarehouseID"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -429,7 +431,9 @@ paths:
                 items:
                   type: array
                   items:
-                    $ref: "#/components/schemas/ItemRequest"
+                    allOf:
+                      - $ref: "#/components/schemas/Item"
+                      - $ref: "#/components/schemas/WarehouseID"
       responses:
         200:
           $ref: "#/components/responses/Items"
@@ -453,7 +457,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ItemRequest"
+              allOf:
+                - $ref: "#/components/schemas/Item"
+                - $ref: "#/components/schemas/WarehouseID"
       responses:
         200:
           $ref: "#/components/responses/Item"
@@ -630,6 +636,7 @@ components:
         warehouse:
           type: array
           description: Item warehouse BSON Id
+          readOnly: true
           items:
             type: object
             properties:
@@ -649,47 +656,16 @@ components:
           format: date-time
           description: Time when this object was updated
           readOnly: true
-    ItemRequest:
-      required:
-        - name
-        - unit
-        - type
-        - warehouse
+    WarehouseID:
       type: object
+      required:
+        - warehouse
       properties:
-        name:
-          type: string
-          description: Item name
-        sku:
-          type: string
-          description: Item unique SKU code
-        unit:
-          type: string
-          description: Item unit of measurement
-          enum:
-            - PCS
-            - KG
-            - LTR
-            - BTL
-            - SET
-            - PSG
-            - MTR
-            - GLN
-        type:
-          description: Item type
-          type: string
-          enum:
-            - chemical
-            - consumable
-        bufferStock:
-          description: Item safe buffer stock quantity
-          type: number
-          default: 0
         warehouse:
-          type: array
           description: Item warehouse BSON Id
+          type: array
           items:
-            type: string
+              type: string
     ResponseError:
       type: object
       properties:
