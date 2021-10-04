@@ -13,13 +13,7 @@ const options = {
 let router = Router();
 
 router.get("/", (_req, res) => {
-  res
-    .type("html")
-    .setHeader(
-      "Content-Security-Policy",
-      "script-src 'self' https://unpkg.com https://cdn.jsdelivr.net data: blob: 'unsafe-eval' 'unsafe-inline'"
-    )
-    .sendFile("api.html", options);
+  res.type("html").sendFile("api.html", options);
 });
 
 export default router;

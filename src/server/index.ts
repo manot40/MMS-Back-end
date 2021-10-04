@@ -117,7 +117,7 @@ export default class Server {
       interval: "1d",
       path: "logs",
     });
-    this.app.use(helmet());
+    this.app.use(helmet({ contentSecurityPolicy: false }));
     this.app.use(cors(corsConfig));
     this.app.use(compression());
     this.app.use(urlencoded({ extended: true }));
