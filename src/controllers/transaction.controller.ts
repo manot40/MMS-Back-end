@@ -14,10 +14,10 @@ import {
   checkIfTrxExist,
 } from "../services/transaction.service";
 
-async function verifyRequestIntegrity(role: String, id: String) {
-  if (!(await checkIfTrxExist({ _id: id }))) return "404";
+async function verifyRequestIntegrity(_id: String, user: String, role: String) {
+  if (!(await checkIfTrxExist({ _id }))) return "404";
   if (role !== "admin") {
-    if (!(await checkIfTrxExist({ _id: id, user: id, status: "draft" })))
+    if (!(await checkIfTrxExist({ _id, user, status: "draft" })))
       return "403";
   }
 }
@@ -66,10 +66,10 @@ export async function getTransactionsHandler(req: Request, res: Response) {
 export async function updateTransactionHandler(req: Request, res: Response) {
   const id = get(req, "params.trxId");
   const role = get(req, "user.role");
-  let { body } = req;
-  body = { ...body, user: get(req, "user._id") };
+  const user = get(req, "user._id");
+  const body = { ...req.body, user };
 
-  const validity = await verifyRequestIntegrity(role, id);
+  const validity = await verifyRequestIntegrity(id, user, role);
   if (validity === "404") return res.status(404).send(msg(404, {}));
   if (validity === "403") return res.status(403).send(msg(403, {}));
 
@@ -98,8 +98,9 @@ export async function updateTransactionHandler(req: Request, res: Response) {
 export async function deleteTransactionHandler(req: Request, res: Response) {
   const id = get(req, "params.trxId");
   const role = get(req, "user.role");
+  const user = get(req, "user._id");
 
-  const validity = await verifyRequestIntegrity(role, id);
+  const validity = await verifyRequestIntegrity(id, user, role);
   if (validity === "404") return res.status(404).send(msg(404, {}));
   if (validity === "403") return res.status(403).send(msg(403, {}));
 
