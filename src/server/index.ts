@@ -54,7 +54,7 @@ export default class Server {
         thread = parseInt(config.clusterThread);
       }
 
-      if (cluster.isMaster) {
+      if (cluster.isPrimary || cluster.isMaster) {
         log.info(`(Server) Listening on port ${config.listenPort}`);
         log.info(`(Server) Cluster mode is active.`);
         log.info(
@@ -101,7 +101,7 @@ export default class Server {
       this.server = this.app.listen(
         process.env.PORT || config.listenPort,
         () => {
-          cluster.isMaster &&
+          (cluster.isPrimary || cluster.isMaster) &&
             log.info(`(Server) Listening on port ${config.listenPort}`);
           log.info(`(Server) Running in PID: ${process.pid}`);
           resolve(this.server);

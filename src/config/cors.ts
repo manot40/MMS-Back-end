@@ -1,5 +1,5 @@
 // CORS Settings
 const corsConfig = {
-  origin: process.env.CORS_WHITELIST.split(";") || '*',
+  origin: process.env.CORS_WHITELIST.split(";") || "*",
 };
 export default corsConfig;
