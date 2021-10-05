@@ -79,48 +79,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              required:
+                - password
+              allOf:
+                - $ref: "#/components/schemas/User"
+                - properties:
+                    password:
+                      type: string
+                      description: User password input
         required: true
       responses:
         200:
-          description: New User Registration Completed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  data:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                        description: Auto-generated unique Object IDs
-                        readOnly: true
-                      username:
-                        type: string
-                        description: Username for user login credentials (Must unique)
-                      name:
-                        type: string
-                        description: User real full name
-                      role:
-                        type: string
-                        description: List of allowed node
-                        default: user
-                      affiliation:
-                        type: string
-                        description: User vendor affiliation
-                      createdAt:
-                        type: string
-                        format: date-time
-                        description: Time when this object was created
-                      updatedAt:
-                        type: string
-                        format: date-time
-                        description: Time when this object was updated
-                  message:
-                    type: string
+          $ref: "#/components/responses/User"
         400:
           $ref: "#/components/responses/400"
         401:
@@ -216,6 +186,32 @@ paths:
           $ref: "#/components/responses/401"
         500:
           $ref: "#/components/responses/500"
+  /user/logout:
+    delete:
+      tags:
+        - User
+      summary: Logging Out User
+      description: "Logging out current user, and void user authentication token"
+      security:
+       - bearerAuth: []
+      responses:
+        200:
+          description: User logged out successfully
+        401:
+          $ref: "#/components/responses/401"
+  /user/me:
+    get:
+      tags:
+        - User
+      summary: Get Current User Information
+      description: "Fetch current logged in user information, this is useful for setting up user state in client app"
+      security:
+       - bearerAuth: []
+      responses:
+        200:
+          $ref: "#/components/responses/User"
+        401:
+          $ref: "#/components/responses/401"
   /warehouse:
     get:
       tags:
@@ -629,7 +625,6 @@ components:
     User:
       required:
         - username
-        - password
         - name
         - affiliation
       type: object
@@ -641,9 +636,6 @@ components:
         username:
           type: string
           description: Username for user login credentials (Must unique)
-        password:
-          type: string
-          description: User defined password
         name:
           type: string
           description: User real full name
@@ -654,6 +646,11 @@ components:
             - user
             - admin
           default: user
+        avatar:
+          type: string
+          description: Name of avatar image file
+          example: "avatar.jpg"
+          readOnly: true
         affiliation:
           type: string
           description: User vendor affiliation
@@ -927,7 +924,7 @@ components:
       required: true
       schema:
         type: string
-      description: Object ID of the Object
+      description: Object ID of this entity
     Search:
       in: query
       name: search
@@ -985,6 +982,19 @@ components:
       example: "2020-12-31"
 
   responses:
+    User:
+      description: Action completed successfully, user data will shown to user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: "#/components/schemas/User"
+              message:
+                type: string
     Warehouse:
       description: Action completed successfully, warehouse(s) data will shown to user
       content:
