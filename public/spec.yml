@@ -768,6 +768,7 @@ components:
             oneOf:
               - type: string
               - type: object
+                readOnly: true
                 properties:
                   _id:
                     description: Warehouse unique Object ID
