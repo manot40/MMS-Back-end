@@ -37,6 +37,7 @@ import {
 export default class Server {
   private app: express.Application;
   private server: http.Server;
+  private verifyUser = (role?: string) => new requireAuth(role).verify;
 
   constructor() {
     this.initProcess();
@@ -143,22 +144,20 @@ export default class Server {
   }
 
   private configureRoutes() {
-    const verifyUser = (role?: string) => new requireAuth(role).verify;
-
     this.app.use("/", publicRoute);
     this.app.use("/install", firstInstallRoute);
 
     // Standard user route
     this.app.use("/auth", authRoute);
-    this.app.use("/user", verifyUser(), userRoute);
-    this.app.use("/item", verifyUser(), itemRoute);
-    this.app.use("/warehouse", verifyUser(), warehouseRoute);
-    this.app.use("/transaction", verifyUser(), transactionRoute);
+    this.app.use("/user", this.verifyUser(), userRoute);
+    this.app.use("/item", this.verifyUser(), itemRoute);
+    this.app.use("/warehouse", this.verifyUser(), warehouseRoute);
+    this.app.use("/transaction", this.verifyUser(), transactionRoute);
 
     // Administrator route
-    this.app.use("/admin/users", verifyUser("asAdmin"), adminUsersRoute);
-    this.app.use("/admin/item", verifyUser("asAdmin"), adminItemRoute);
-    this.app.use("/admin/warehouse", verifyUser("asAdmin"), adminWarehouseRoute);
-    this.app.use("/admin/transaction", verifyUser("asAdmin"), adminTransactionRoute);
+    this.app.use("/admin/users", this.verifyUser("asAdmin"), adminUsersRoute);
+    this.app.use("/admin/item", this.verifyUser("asAdmin"), adminItemRoute);
+    this.app.use("/admin/warehouse", this.verifyUser("asAdmin"), adminWarehouseRoute);
+    this.app.use("/admin/transaction", this.verifyUser("asAdmin"), adminTransactionRoute);
   }
 }
