@@ -14,10 +14,11 @@ import {
   checkIfTrxExist,
 } from "../services/transaction.service";
 
-async function verifyRequestValidity(role: String, id: String) {
+async function verifyRequestIntegrity(role: String, id: String) {
   if (!(await checkIfTrxExist({ _id: id }))) return "404";
   if (role !== "admin") {
-    if (!(await checkIfTrxExist({ _id: id, user: id }))) return "401";
+    if (!(await checkIfTrxExist({ _id: id, user: id, type: "draft" })))
+      return "403";
   }
 }
 
@@ -68,9 +69,9 @@ export async function updateTransactionHandler(req: Request, res: Response) {
   let { body } = req;
   body = { ...body, user: get(req, "user._id") };
 
-  const validity = await verifyRequestValidity(role, id);
+  const validity = await verifyRequestIntegrity(role, id);
   if (validity === "404") return res.status(404).send(msg(404, {}));
-  if (validity === "401") return res.status(401).send(msg(401, {}));
+  if (validity === "403") return res.status(403).send(msg(403, {}));
 
   // Flush item array first
   await updateTransaction(
@@ -98,9 +99,9 @@ export async function deleteTransactionHandler(req: Request, res: Response) {
   const id = get(req, "params.trxId");
   const role = get(req, "user.role");
 
-  const validity = await verifyRequestValidity(role, id);
+  const validity = await verifyRequestIntegrity(role, id);
   if (validity === "404") return res.status(404).send(msg(404, {}));
-  if (validity === "401") return res.status(401).send(msg(401, {}));
+  if (validity === "403") return res.status(403).send(msg(403, {}));
 
   await deleteTransaction({ _id: id, status: "draft" })
     .then((data) => {
