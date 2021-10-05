@@ -17,7 +17,7 @@ import {
 async function verifyRequestIntegrity(role: String, id: String) {
   if (!(await checkIfTrxExist({ _id: id }))) return "404";
   if (role !== "admin") {
-    if (!(await checkIfTrxExist({ _id: id, user: id, type: "draft" })))
+    if (!(await checkIfTrxExist({ _id: id, user: id, status: "draft" })))
       return "403";
   }
 }
