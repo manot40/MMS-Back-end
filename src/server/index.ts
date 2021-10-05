@@ -137,10 +137,6 @@ export default class Server {
         }
       )
     );
-    // Terminal logger
-    if (process.env.NODE_ENV === "dev") {
-      this.app.use(morgan("dev"));
-    }
   }
 
   private configureRoutes() {
