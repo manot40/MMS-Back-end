@@ -1,4 +1,5 @@
-// External dependencies
+import cluster from "cluster";
+import { cpus } from "os";
 import express, { urlencoded, json } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -7,16 +8,16 @@ import http from "http";
 import path from "path";
 import serveIndex from "serve-index";
 import compression from "compression";
+const rfs = require("rotating-file-stream");
 
-// Custom scripts and helpers
+// Config and Helpers utility
 import config from "../config/app";
 import corsConfig from "../config/cors";
 import log from "../helpers/pino";
 import db from "./db";
+
+// Middleware
 import { validateJWT, requireAuth } from "../middleware";
-const cluster = require("cluster");
-const totalCpuThread = require("os").cpus().length;
-var rfs = require("rotating-file-stream");
 
 // Routes
 import {
@@ -38,24 +39,24 @@ export default class Server {
   private server: http.Server;
 
   constructor() {
-    this.initExpress();
+    this.initProcess();
   }
 
-  private initExpress() {
-    if (config.enableCluster) {
+  private initProcess() {
+    if (config.enableCluster === "true") {
       let thread: number;
       if (
         config.clusterThread == "auto" ||
-        parseInt(config.clusterThread) > totalCpuThread
+        parseInt(config.clusterThread) > cpus().length
       ) {
-        thread = totalCpuThread;
+        thread = cpus().length;
       } else {
         thread = parseInt(config.clusterThread);
       }
 
       if (cluster.isMaster) {
-        log.info(`(Server) Cluster mode is active.`);
         log.info(`(Server) Listening on port ${config.listenPort}`);
+        log.info(`(Server) Cluster mode is active.`);
         log.info(
           `(Server) ${thread} Threads in use, with main process PID: ${process.pid}`
         );
@@ -75,14 +76,14 @@ export default class Server {
           }
         );
       } else {
-        this.callExpress();
+        this.initServer();
       }
     } else {
-      this.callExpress();
+      this.initServer();
     }
   }
 
-  private async callExpress() {
+  private async initServer() {
     // Database Connection
     await db.connect();
     // Express
@@ -100,9 +101,8 @@ export default class Server {
       this.server = this.app.listen(
         process.env.PORT || config.listenPort,
         () => {
-          cluster.isMaster
-            ? log.info(`(Server) Listening on port ${config.listenPort}`)
-            : null;
+          cluster.isMaster &&
+            log.info(`(Server) Listening on port ${config.listenPort}`);
           log.info(`(Server) Running in PID: ${process.pid}`);
           resolve(this.server);
         }
@@ -143,24 +143,22 @@ export default class Server {
   }
 
   private configureRoutes() {
+    const verifyUser = (role?: string) => new requireAuth(role).verify;
+
     this.app.use("/", publicRoute);
     this.app.use("/install", firstInstallRoute);
 
     // Standard user route
     this.app.use("/auth", authRoute);
-    this.app.use("/user", requireAuth.user, userRoute);
-    this.app.use("/item", requireAuth.user, itemRoute);
-    this.app.use("/warehouse", requireAuth.user, warehouseRoute);
-    this.app.use("/transaction", requireAuth.user, transactionRoute);
+    this.app.use("/user", verifyUser(), userRoute);
+    this.app.use("/item", verifyUser(), itemRoute);
+    this.app.use("/warehouse", verifyUser(), warehouseRoute);
+    this.app.use("/transaction", verifyUser(), transactionRoute);
 
     // Administrator route
-    this.app.use("/admin/users", requireAuth.admin, adminUsersRoute);
-    this.app.use("/admin/item", requireAuth.admin, adminItemRoute);
-    this.app.use("/admin/warehouse", requireAuth.admin, adminWarehouseRoute);
-    this.app.use(
-      "/admin/transaction",
-      requireAuth.admin,
-      adminTransactionRoute
-    );
+    this.app.use("/admin/users", verifyUser("asAdmin"), adminUsersRoute);
+    this.app.use("/admin/item", verifyUser("asAdmin"), adminItemRoute);
+    this.app.use("/admin/warehouse", verifyUser("asAdmin"), adminWarehouseRoute);
+    this.app.use("/admin/transaction", verifyUser("asAdmin"), adminTransactionRoute);
   }
 }

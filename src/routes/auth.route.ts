@@ -20,7 +20,7 @@ let router = Router();
 
 router.post(
   "/register",
-  requireAuth.admin,
+  new requireAuth("asAdmin").verify,
   validateRequest(createUserSchema),
   createUserHandler
 );
