@@ -762,16 +762,12 @@ components:
           type: number
           default: 0
         warehouse:
-          oneOf:
-            - type: array
-              description: Item warehouse Object ID
-              items:
-                type: string
-            - type: array
-              description: Item warehouse Object ID
-              readOnly: true
-              items:
-                type: object
+          type: array
+          description: Item warehouse Object ID
+          items:
+            oneOf:
+              - type: string
+              - type: object
                 properties:
                   _id:
                     description: Warehouse unique Object ID
@@ -852,29 +848,20 @@ components:
                   description: Warehouse name
                   type: string
         items:
-          oneOf:
-            - type: array
-              description: List of items in this transaction
-              items:
-                required:
-                  - item
-                  - quantity
-                type: object
-                properties:
-                  item:
+          type: array
+          description: List of items in this transaction
+          items:
+            required:
+              - item
+              - quantity
+            type: object
+            properties:
+              item:
+                oneOf:
+                  - type: string
                     description: Item unique Object ID
-                    type: string
-                  quantity:
-                    description: Item quantity
-                    type: number
-            - type: array
-              readOnly: true
-              description: List of items in this transaction
-              items:
-                type: object
-                properties:
-                  item:
-                    type: object
+                  - type: object
+                    readOnly: true
                     properties:
                       _id:
                         type: string
@@ -882,9 +869,9 @@ components:
                       name:
                         type: string
                         description: Item name
-                  quantity:
-                    description: Item quantity
-                    type: number
+              quantity:
+                description: Item quantity
+                type: number
         createdAt:
           type: string
           format: date-time
