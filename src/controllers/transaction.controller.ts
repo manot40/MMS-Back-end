@@ -60,7 +60,7 @@ export async function getTransactionsHandler(req: Request, res: Response) {
     populate: [
       { path: "user", select: "name" },
       { path: "warehouse", select: "name" },
-      { path: "items.$.item", select: "name" },
+      { path: "items.item", select: "name" },
     ],
     sort: { txDate: "desc" },
     limit: 10,
