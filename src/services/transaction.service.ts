@@ -16,6 +16,10 @@ export async function checkIfTrxExist(query: FilterQuery<TransactionDocument>) {
   return await Transaction.exists(query);
 }
 
+export function countTransactions(query?: FilterQuery<TransactionDocument>) {
+  return Transaction.countDocuments(query);
+}
+
 export function findTransaction(
   query: FilterQuery<TransactionDocument>,
   options: QueryOptions = { lean: true }

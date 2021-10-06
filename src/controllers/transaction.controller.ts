@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import XLSX from "xlsx";
+import regexp from "../helpers/escapeRegex";
 import { customAlphabet as nanoid } from "nanoid";
 import { Response, Request } from "express";
 import { get } from "lodash";
@@ -12,6 +13,7 @@ import {
   getTransactions,
   deleteTransaction,
   checkIfTrxExist,
+  countTransactions,
 } from "../services/transaction.service";
 
 async function verifyRequestIntegrity(_id: String, user: String, role: String) {
@@ -53,9 +55,44 @@ export async function getTransactionHandler(req: Request, res: Response) {
 }
 
 export async function getTransactionsHandler(req: Request, res: Response) {
-  await getTransactions({})
+  const query = req.query;
+  let options: any = {
+    populate: [
+      { path: "user", select: "name" },
+      { path: "warehouse", select: "name" },
+      { path: "items.$.item", select: "name" },
+    ],
+    sort: { txDate: "desc" },
+    limit: 10,
+  };
+  let filter = {};
+
+  if (query.search) {
+    const $regex = new RegExp(regexp(query.search as string), "i");
+    filter = { ...filter, description: { $regex } };
+  }
+  if (query.limit) {
+    // @ts-ignore
+    options.limit = parseInt(query.limit);
+  }
+  if (query.page) {
+    options.limit &&= options = {
+      ...options,
+      // @ts-ignore
+      skip: (parseInt(query.page) - 1) * options.limit,
+    };
+  }
+  if (query.sort) {
+    // @ts-ignore
+    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
+  }
+  const count = await countTransactions({ ...filter }).catch(() => 0);
+
+  await getTransactions({...filter}, {...options})
     .then((data) => {
-      return res.status(200).send(msg(201, data));
+      const response = msg(200, data);
+      const totalPages = options.limit ? Math.ceil(count / options.limit) : 1;
+      return res.status(200).send({ ...response, totalPages });
     })
     .catch((err) => {
       log.warn("Request Rejected on GetTransactions | " + err.message);
