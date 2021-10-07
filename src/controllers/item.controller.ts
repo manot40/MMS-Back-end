@@ -81,6 +81,10 @@ export async function getItemsHandler(req: Request, res: Response) {
     const $regex = new RegExp(regexp(query.search as string), "i");
     filter = { ...filter, name: { $regex } };
   }
+  if (query.filter) {
+    const filterReq: Object = query.filter;
+    filter = { ...filter, ...filterReq };
+  }
   if (query.limit) {
     // @ts-ignore
     options.limit = parseInt(query.limit);

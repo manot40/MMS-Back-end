@@ -27,6 +27,7 @@ async function verifyRequestIntegrity(_id: String, user: String, role: String) {
 export async function createTransactionHandler(req: Request, res: Response) {
   const user = get(req, "user._id");
   const { body } = req;
+  body.status && delete body.status;
   const randId = nanoid("1234567890ABCDEF", 6);
   const txId = "TRX-" + body.type.toUpperCase() + "-" + randId();
 
@@ -70,6 +71,10 @@ export async function getTransactionsHandler(req: Request, res: Response) {
   if (query.search) {
     const $regex = new RegExp(regexp(query.search as string), "i");
     filter = { ...filter, description: { $regex } };
+  }
+  if (query.filter) {
+    const filterReq: Object = query.filter;
+    filter = { ...filter, ...filterReq };
   }
   if (query.limit) {
     // @ts-ignore
