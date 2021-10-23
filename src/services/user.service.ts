@@ -1,14 +1,11 @@
 import { omit } from "lodash";
-import { DocumentDefinition, FilterQuery } from "mongoose";
+import { SchemaDefinition, FilterQuery } from "mongoose";
 import User, { UserDocument } from "../models/user.model";
 
-export async function createUser(input: DocumentDefinition<UserDocument>) {
-  try {
-    return await User.create(input);
-  } catch (err) {
-    console.log(err);
+export async function createUser(input: SchemaDefinition<UserDocument>) {
+  return await User.create(input).catch((err) => {
     throw new Error(err);
-  }
+  });
 }
 
 export async function findUser(

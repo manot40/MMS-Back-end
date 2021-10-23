@@ -1,12 +1,12 @@
 import {
-  DocumentDefinition,
+  SchemaDefinition,
   FilterQuery,
   QueryOptions,
   UpdateQuery,
 } from "mongoose";
 import Warehouse, { WarehouseDocument } from "../models/warehouse.model";
 
-export function createWarehouse(input: DocumentDefinition<WarehouseDocument>) {
+export function createWarehouse(input: SchemaDefinition<WarehouseDocument>) {
   return Warehouse.create(input);
 }
 

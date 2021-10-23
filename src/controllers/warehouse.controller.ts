@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import regexp from "../helpers/escapeRegex";
+import queryHandler from "../helpers/queryHandler";
 import { get } from "lodash";
 import msg from "../helpers/messenger";
 import {
@@ -37,35 +37,13 @@ export async function getWarehouseHandler(req: Request, res: Response) {
 }
 
 export async function getWarehousesHandler(req: Request, res: Response) {
-  const query = req.query;
-  let filter = {};
-  let options = {
+  const { filter, options } = queryHandler({
     limit: 10,
     sort: { name: "asc" },
-  };
-
-  if (query.search) {
-    const $regex = new RegExp(regexp(query.search as string), "i");
-    filter = { ...filter, name: { $regex } };
-  }
-  if (query.filter) {
-    const filterReq: Object = query.filter;
-    filter = { ...filter, ...filterReq };
-  }
-  if (query.limit) {
-    // @ts-ignore
-    options.limit = parseInt(query.limit);
-  }
-  if (query.page) {
-    // @ts-ignore
-    options = { ...options, skip: (parseInt(query.page) - 1) * options.limit };
-  }
-  if (query.sort) {
-    // @ts-ignore
-    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
-  }
+    ...req.query,
+  });
+  
   const count = await countWarehouses({ ...filter });
-
   await getWarehouses({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);

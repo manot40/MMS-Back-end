@@ -1,12 +1,12 @@
 import {
-  DocumentDefinition,
+  SchemaDefinition,
   FilterQuery,
   QueryOptions,
   UpdateQuery,
 } from "mongoose";
 import Item, { ItemDocument } from "../models/item.model";
 
-export function createItem(input: DocumentDefinition<ItemDocument>) {
+export function createItem(input: SchemaDefinition<ItemDocument>) {
   return Item.create(input);
 }
 
@@ -14,7 +14,7 @@ export function countItems(query?: FilterQuery<ItemDocument>) {
   return Item.countDocuments(query);
 }
 
-export function createManyItem(input: DocumentDefinition<ItemDocument>) {
+export function createManyItem(input: SchemaDefinition<ItemDocument>) {
   return Item.insertMany(input);
 }
 

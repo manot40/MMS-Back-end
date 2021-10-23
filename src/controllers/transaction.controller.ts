@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import XLSX from "xlsx";
-import regexp from "../helpers/escapeRegex";
+import queryHandler from "../helpers/queryHandler";
 import { customAlphabet as nanoid } from "nanoid";
 import { Response, Request } from "express";
 import { get } from "lodash";
@@ -19,8 +19,7 @@ import {
 async function verifyRequestIntegrity(_id: String, user: String, role: String) {
   if (!(await checkIfTrxExist({ _id }))) return "404";
   if (role !== "admin") {
-    if (!(await checkIfTrxExist({ _id, user, status: "draft" })))
-      return "403";
+    if (!(await checkIfTrxExist({ _id, user, status: "draft" }))) return "403";
   }
 }
 
@@ -56,8 +55,7 @@ export async function getTransactionHandler(req: Request, res: Response) {
 }
 
 export async function getTransactionsHandler(req: Request, res: Response) {
-  const query = req.query;
-  let options: any = {
+  let { filter, options } = queryHandler({
     populate: [
       { path: "user", select: "name" },
       { path: "warehouse", select: "name" },
@@ -65,35 +63,14 @@ export async function getTransactionsHandler(req: Request, res: Response) {
     ],
     sort: { txDate: "desc" },
     limit: 10,
-  };
-  let filter = {};
-
-  if (query.search) {
-    const $regex = new RegExp(regexp(query.search as string), "i");
-    filter = { ...filter, description: { $regex } };
+    ...req.query,
+  }, "description");
+  if (req.query.filter) {
+    filter = { ...filter, ...(req.query.filter as Object) };
   }
-  if (query.filter) {
-    const filterReq: Object = query.filter;
-    filter = { ...filter, ...filterReq };
-  }
-  if (query.limit) {
-    // @ts-ignore
-    options.limit = parseInt(query.limit);
-  }
-  if (query.page) {
-    options.limit &&= options = {
-      ...options,
-      // @ts-ignore
-      skip: (parseInt(query.page) - 1) * options.limit,
-    };
-  }
-  if (query.sort) {
-    // @ts-ignore
-    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
-  }
+  
   const count = await countTransactions({ ...filter }).catch(() => 0);
-
-  await getTransactions({...filter}, {...options})
+  await getTransactions({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
       const totalPages = options.limit ? Math.ceil(count / options.limit) : 1;

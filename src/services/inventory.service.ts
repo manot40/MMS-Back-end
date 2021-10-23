@@ -1,12 +1,12 @@
 import {
-  DocumentDefinition,
+  SchemaDefinition,
   FilterQuery,
   QueryOptions,
   UpdateQuery,
 } from "mongoose";
 import Inventory, { InventoryDocument } from "../models/inventory.model";
 
-export function createInventory(input: DocumentDefinition<InventoryDocument>) {
+export function createInventory(input: SchemaDefinition<InventoryDocument>) {
   return Inventory.create(input);
 }
 

@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import regexp from "../helpers/escapeRegex";
+import queryHandler from "../helpers/queryHandler";
 import { get } from "lodash";
 import msg from "../helpers/messenger";
 import {
@@ -11,6 +11,7 @@ import {
   deleteItem,
   createManyItem,
 } from "../services/item.service";
+import { QueryOptions } from "mongoose";
 
 export async function createItemHandler(req: Request, res: Response) {
   const userId = get(req, "user._id");
@@ -42,7 +43,7 @@ export async function importItemsDataHandler(req: Request, res: Response) {
 }
 
 export async function getItemHandler(req: Request, res: Response) {
-  let options: any = {
+  let options: QueryOptions = {
     populate: [
       { path: "user", select: "name" },
       { path: "warehouse", select: "name" },
@@ -60,48 +61,23 @@ export async function getItemHandler(req: Request, res: Response) {
 }
 
 export async function getItemsHandler(req: Request, res: Response) {
-  const query = req.query;
-  let options: any = {
+  let { options, filter } = queryHandler({
     populate: [
       { path: "user", select: "name" },
       { path: "warehouse", select: "name" },
     ],
     sort: { name: "asc" },
     limit: 10,
-  };
-  let filter = {};
-
-  if (query.warehouse) {
-    filter = { ...filter, warehouse: query.warehouse };
+    ...req.query,
+  });
+  if (req.query.warehouse) {
+    filter = { ...filter, warehouse: req.query.warehouse };
     options = { ...options, projection: "_id name unit" };
-    if (!query.limit) delete options.limit;
+    if (!req.query.limit) delete options.limit;
     delete options.populate;
   }
-  if (query.search) {
-    const $regex = new RegExp(regexp(query.search as string), "i");
-    filter = { ...filter, name: { $regex } };
-  }
-  if (query.filter) {
-    const filterReq: Object = query.filter;
-    filter = { ...filter, ...filterReq };
-  }
-  if (query.limit) {
-    // @ts-ignore
-    options.limit = parseInt(query.limit);
-  }
-  if (query.page) {
-    options.limit &&= options = {
-      ...options,
-      // @ts-ignore
-      skip: (parseInt(query.page) - 1) * options.limit,
-    };
-  }
-  if (query.sort) {
-    // @ts-ignore
-    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
-  }
+  
   const count = await countItems({ ...filter }).catch(() => 0);
-
   await getItems({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);

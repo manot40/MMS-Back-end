@@ -1,5 +1,5 @@
 import {
-  DocumentDefinition,
+  SchemaDefinition,
   FilterQuery,
   QueryOptions,
   UpdateQuery,
@@ -7,7 +7,7 @@ import {
 import Transaction, { TransactionDocument } from "../models/transaction.model";
 
 export function createTransaction(
-  input: DocumentDefinition<TransactionDocument>
+  input: SchemaDefinition<TransactionDocument>
 ) {
   return Transaction.create(input);
 }
