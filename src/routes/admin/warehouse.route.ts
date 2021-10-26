@@ -17,22 +17,22 @@ import {
   deleteWarehouseHandler,
 } from "../../controllers/warehouse.controller";
 
-let router = Router();
+let route = Router();
 
-router.post(
+route.post(
   "/",
   validateRequest(createWarehouseSchema),
   createWarehouseHandler
 );
-router.put(
+route.put(
   "/:warehouseId",
   validateRequest(updateWarehouseSchema),
   updateWarehouseHandler
 );
-router.delete(
+route.delete(
   "/:warehouseId",
   validateRequest(deleteWarehouseSchema),
   deleteWarehouseHandler
 );
 
-export default router;
+export default route;

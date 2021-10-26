@@ -16,20 +16,20 @@ import {
   refreshAccessToken,
 } from "../controllers/auth.controller";
 
-let router = Router();
+let route = Router();
 
-router.post(
+route.post(
   "/register",
   new requireAuth("asAdmin").verify,
   validateRequest(createUserSchema),
   createUserHandler
 );
-router.post(
+route.post(
   "/login",
   validateRequest(createUserSessionSchema),
   createUserSessionHandler
 );
-router.post("/refresh", refreshAccessToken);
-router.get("/session", getUserSessionHandler);
+route.post("/refresh", refreshAccessToken);
+route.get("/session", getUserSessionHandler);
 
-export default router;
+export default route;

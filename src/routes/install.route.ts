@@ -9,12 +9,12 @@ const upload = multer();
 
 // Controllers
 
-let router = Router();
+let route = Router();
 
-router.get("/", (req, res) => {
+route.get("/", (req, res) => {
   res.sendStatus(200);
 });
 
-router.post("/import/items", upload.single("importFile"), importItemsFromExcel);
+route.post("/import/items", upload.single("importFile"), importItemsFromExcel);
 
-export default router;
+export default route;

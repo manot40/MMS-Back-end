@@ -10,9 +10,9 @@ import {
   getItemsHandler,
 } from "../controllers/item.controller";
 
-let router = Router();
+let route = Router();
 
-router.get("/", getItemsHandler);
-router.get("/:itemId", getItemHandler);
+route.get("/", getItemsHandler);
+route.get("/:itemId", getItemHandler);
 
-export default router;
+export default route;

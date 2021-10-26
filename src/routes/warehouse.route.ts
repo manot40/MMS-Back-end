@@ -10,9 +10,9 @@ import {
   getWarehousesHandler,
 } from "../controllers/warehouse.controller";
 
-let router = Router();
+let route = Router();
 
-router.get("/", getWarehousesHandler);
-router.get("/:warehouseId", getWarehouseHandler);
+route.get("/", getWarehousesHandler);
+route.get("/:warehouseId", getWarehouseHandler);
 
-export default router;
+export default route;

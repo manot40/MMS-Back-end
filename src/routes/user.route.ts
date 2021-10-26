@@ -8,9 +8,9 @@ import { invalidateUserSessionHandler } from "../controllers/auth.controller";
 
 // Controllers
 
-let router = Router();
+let route = Router();
 
-router.get("/me", getUserInformationHandler);
-router.delete("/logout", invalidateUserSessionHandler);
+route.get("/me", getUserInformationHandler);
+route.delete("/logout", invalidateUserSessionHandler);
 
-export default router;
+export default route;

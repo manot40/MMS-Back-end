@@ -14,13 +14,13 @@ import {
   exportTransactionsHandler,
 } from "../controllers/transaction.controller";
 
-let router = Router();
+let route = Router();
 
-router.get("/", getTransactionsHandler);
-router.get("/export", exportTransactionsHandler);
-router.get("/:trxId", getTransactionHandler);
-router.post("/", createTransactionHandler);
-router.put("/:trxId", updateTransactionHandler);
-router.delete("/:trxId", deleteTransactionHandler);
+route.get("/", getTransactionsHandler);
+route.get("/export", exportTransactionsHandler);
+route.get("/:trxId", getTransactionHandler);
+route.post("/", createTransactionHandler);
+route.put("/:trxId", updateTransactionHandler);
+route.delete("/:trxId", deleteTransactionHandler);
 
-export default router;
+export default route;

@@ -1,3 +1,4 @@
+import serveIndex from "serve-index";
 import { Router } from "express";
 import path from "path";
 
@@ -10,10 +11,12 @@ const options = {
 
 // Controllers
 
-let router = Router();
+let route = Router();
+const rootPath = path.join(process.cwd());
 
-router.get("/", (_req, res) => {
+route.use("/public", serveIndex(rootPath + "/public"));
+route.get("/", (_req, res) => {
   res.type("html").sendFile("api.html", options);
 });
 
-export default router;
+export default route;

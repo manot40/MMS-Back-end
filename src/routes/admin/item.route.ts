@@ -19,15 +19,15 @@ import {
   importItemsDataHandler,
 } from "../../controllers/item.controller";
 
-let router = Router();
+let route = Router();
 
-router.post("/", validateRequest(createItemSchema), createItemHandler);
-router.post(
+route.post("/", validateRequest(createItemSchema), createItemHandler);
+route.post(
   "/batch",
   validateRequest(createManySchema),
   importItemsDataHandler
 );
-router.put("/:itemId", validateRequest(updateItemSchema), updateItemHandler);
-router.delete("/:itemId", validateRequest(deleteItemSchema), deleteItemHandler);
+route.put("/:itemId", validateRequest(updateItemSchema), updateItemHandler);
+route.delete("/:itemId", validateRequest(deleteItemSchema), deleteItemHandler);
 
-export default router;
+export default route;

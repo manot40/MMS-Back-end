@@ -9,8 +9,8 @@ import {
   exportTransactionsHandler
 } from "../../controllers/transaction.controller";
 
-let router = Router();
+let route = Router();
 
-router.get("/export", exportTransactionsHandler);
+route.get("/export", exportTransactionsHandler);
 
-export default router;
+export default route;

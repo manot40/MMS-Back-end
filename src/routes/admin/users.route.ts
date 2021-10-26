@@ -8,9 +8,9 @@ import { Router } from "express";
 // Controller
 import { flushExpiredTokenHandler } from "../../controllers/auth.controller";
 
-let router = Router();
+let route = Router();
 
-router.post("/", createUserHandler);
-router.delete("/session-flush", flushExpiredTokenHandler);
+route.post("/", createUserHandler);
+route.delete("/session-flush", flushExpiredTokenHandler);
 
-export default router;
+export default route;
