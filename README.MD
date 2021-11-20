@@ -16,7 +16,7 @@ This app use express to run the web server, and mongoose (MongoDB) for model dat
 
 ### Requirements
 - Computer with Windows 10 or Linux
-- Node.js 14 or greater
+- Node.js 16 or greater
 - MongoDB [Atlas instance](https://mongodb.com/cloud/atlas)
 
 ### Configuration

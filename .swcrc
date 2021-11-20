@@ -12,8 +12,7 @@
   },
   "module": {
     "type": "commonjs",
-    "strict": false,
-    "strictMode": false,
+    "strictMode": true,
     "lazy": false,
     "noInterop": false
   },
