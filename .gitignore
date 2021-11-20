@@ -1,9 +1,13 @@
 .vscode
 .env
+
+.build/**/*
+.dist/**/*
+
 .gcloudignore
 Procfile
 app.yaml
+
 test.js
 node_modules
-build/**/*
 logs/*

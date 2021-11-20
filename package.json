@@ -7,11 +7,13 @@
   },
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon --ext ts --config nodemon.json --exec \"npm run build:dev\"",
-    "build": "swc src -d build",
-    "build:dev": "npm run build && node build/app.js",
-    "start": "npm run build && node build/app.js",
-    "test": "jest"
+    "dev": "nodemon --config nodemon.json --exec \"npm run build:dev && npm start\"",
+    "build": "swc src -d .build --env-name='production'",
+    "build:dev": "swc src -d .build --env-name='development'",
+    "generate": "npx spack",
+    "start": "node .build/app.js",
+    "clean": "tsc --build --clean",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",

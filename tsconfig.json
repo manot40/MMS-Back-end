@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "removeComments": true,
     "noImplicitAny": true,
-    "outDir": "./build",
+    "outDir": ".build",
     "baseUrl": "src",
   },
   "include": ["src/**/*.ts"],
