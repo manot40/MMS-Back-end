@@ -1,3 +1,4 @@
+require('dotenv').config();
 // JWT Settings
 const jwtConfig = {
   salt: process.env.JWT_SALT_FACTOR as unknown || 10,

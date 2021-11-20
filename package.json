@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.x.x"
   },
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon --config nodemon.json ./src/app.ts",
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "start": "node ./build/app.js",
+    "dev": "nodemon --ext ts --config nodemon.json --exec \"npm run build:dev\"",
+    "build": "swc src -d build",
+    "build:dev": "npm run build && node build/app.js",
+    "start": "npm run build && node build/app.js",
     "test": "jest"
   },
   "keywords": [],
@@ -39,6 +39,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@swc/cli": "^0.1.51",
+    "@swc/core": "^1.2.111",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.1",
     "@types/compression": "^1.7.2",

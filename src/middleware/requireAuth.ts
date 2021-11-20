@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { checkAdminRole } from "../services/user.service";
 import msg from "../helpers/messenger";
 
-export class requireAuth {
+class requireAuth {
   private role: string;
 
   constructor(role?: string) {

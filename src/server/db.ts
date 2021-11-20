@@ -7,7 +7,7 @@ export default class db {
     return connect(
       `mongodb+srv://${config.dbUsername}:${config.dbPassword}@${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`
     ).catch((err) => {
-      log.error("(Database) Failed to create connection.", err.message);
+      log.error("(Database) Failed to create connection. " + err);
       log.warn("(Database) Please check your configuration.");
       process.exit(1);
     });

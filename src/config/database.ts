@@ -1,3 +1,4 @@
+require('dotenv').config();
 // Database Settings
 const dbConfig = {
   dbHost: process.env.DB_HOST,

@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { cpus } from "os";
 // App Settings
 const appConfig = {

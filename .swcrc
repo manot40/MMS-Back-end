@@ -1,0 +1,25 @@
+{
+  "minify": false,
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "decorators": false
+    },
+    "transform": null,
+    "target": "es2020",
+    "keepClassNames": true,
+    "loose": false
+  },
+  "module": {
+    "type": "commonjs",
+    "strict": false,
+    "strictMode": false,
+    "lazy": false,
+    "noInterop": false
+  },
+  "env": {
+    "targets": {
+      "node": 16
+    }
+  }
+}
