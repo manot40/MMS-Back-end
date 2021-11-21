@@ -30,6 +30,9 @@ export default (query: IParams, override?: string, callback?: () => void) => {
   if (query.page) {
     options = { ...options, skip: (+query.page - 1) * +options.limit };
   }
+  if (query.populate) {
+    options = { ...options, populate: query.populate };
+  }
   if (query.sort) {
     options.sort = { [query.sort.toString()]: query.sortby || "asc" };
   }
