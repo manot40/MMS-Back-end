@@ -25,17 +25,25 @@ export default class Server {
     config.enableCluster ? this.setupCluster() : this.setupServer();
   }
 
-  public async startServer(): Promise<http.Server> {
+  private startServer(): Promise<http.Server> {
     return new Promise((resolve) => {
       this.server = this.app.listen(
         process.env.PORT || config.listenPort,
         () => {
-          cluster.isMaster &&
+          cluster.isPrimary &&
             log.info(`(Server) Listen port on ${config.listenPort}`);
           log.info(`(Server) Process running in PID: ${process.pid}`);
           resolve(this.server);
         }
       );
+    });
+  }
+  public restartServer() {
+    Object.keys(require.cache).forEach((id) => {
+      delete require.cache[id];
+    });
+    this.server.close(() => {
+      this.startServer();
     });
   }
 
@@ -60,7 +68,7 @@ export default class Server {
 
   private setupCluster() {
     const thread = config.clusterThread;
-    if (cluster.isMaster) {
+    if (cluster.isPrimary) {
       log.info(`(Server) Cluster mode is active.`);
       log.info(
         `(Server) ${thread} Threads in use. Main process PID: ${process.pid}`
