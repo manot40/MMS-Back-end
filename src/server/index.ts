@@ -22,36 +22,36 @@ export default class Server {
   private server: http.Server;
 
   constructor() {
+    cluster.isPrimary &&
+      log.info(`(Server) Process running in PID: ${process.pid}`);
     config.enableCluster ? this.setupCluster() : this.setupServer();
-  }
-
-  private startServer(): Promise<http.Server> {
-    return new Promise((resolve) => {
-      this.server = this.app.listen(
-        process.env.PORT || config.listenPort,
-        () => {
-          cluster.isPrimary &&
-            log.info(`(Server) Listen port on ${config.listenPort}`);
-          log.info(`(Server) Process running in PID: ${process.pid}`);
-          resolve(this.server);
-        }
-      );
-    });
-  }
-  public restartServer() {
-    Object.keys(require.cache).forEach((id) => {
-      delete require.cache[id];
-    });
-    this.server.close(() => {
-      this.startServer();
-    });
   }
 
   private async setupServer() {
     await db.connect();
     this.app = express();
     this.setupMiddleware();
-    this.startServer();
+  }
+
+  public async startServer(): Promise<http.Server> {
+    return new Promise((resolve) => {
+      this.server = this.app.listen(config.listenPort, () => {
+        cluster.isPrimary &&
+          log.info(`(Server) Listen port on ${config.listenPort}`);
+        resolve(this.server);
+      });
+    });
+  }
+  public stopServer() {
+    this.server.close(() => {
+      log.info("(Server) Stopped");
+    });
+  }
+  public restartServer() {
+    log.info("(Server) Restarting...");
+    this.server.close(() => {
+      setTimeout(() => this.startServer(), 1000);
+    });
   }
 
   private setupMiddleware() {
@@ -69,10 +69,7 @@ export default class Server {
   private setupCluster() {
     const thread = config.clusterThread;
     if (cluster.isPrimary) {
-      log.info(`(Server) Cluster mode is active.`);
-      log.info(
-        `(Server) ${thread} Threads in use. Main process PID: ${process.pid}`
-      );
+      log.info(`(Server) Cluster mode is active, ${thread} Threads in use.`);
       for (let i = 0; i < thread; i++) {
         cluster.fork();
       }

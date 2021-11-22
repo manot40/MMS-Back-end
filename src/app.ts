@@ -1,7 +1,10 @@
 import log from "./helpers/pino";
 import Server from "./server";
 
-const app = new Server();
+const app = new Server().startServer();
+// Object.keys(require.cache).forEach((id) => {
+//   delete require.cache[id];
+// });
 
 process.on("uncaughtException", (err: Error) => {
   log.error("Uncaught Exception | " + err.message);

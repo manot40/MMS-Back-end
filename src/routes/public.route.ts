@@ -33,7 +33,7 @@ route.get("/", (_req, res) => {
             />
           </head>
           <body style="height: 100vh">
-            <elements-api apiDescriptionUrl="${config.appHost}/public/spec.yml" router="hash" layout="sidebar" />
+            <elements-api apiDescriptionUrl="${config.appHost}:${config.listenPort}/public/spec.yml" router="hash" layout="sidebar" />
           </body>
         </html>
       `
