@@ -51,7 +51,7 @@ export default class Server {
   public restartServer() {
     log.info("(Server) Restarting...");
     this.server.close(() => {
-      setTimeout(() => this.startServer(), 1000);
+      this.startServer();
     });
   }
 
