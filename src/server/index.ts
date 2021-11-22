@@ -31,6 +31,7 @@ export default class Server {
     await db.connect();
     this.app = express();
     this.setupMiddleware();
+    this.startServer();
   }
 
   public async startServer(): Promise<http.Server> {
