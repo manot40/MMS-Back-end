@@ -38,7 +38,7 @@ export default class Server {
     return new Promise((resolve) => {
       this.server = this.app.listen(config.listenPort, () => {
         cluster.isPrimary &&
-          log.info(`(Server) Listen port on ${config.listenPort}`);
+          log.info(`(Server) Listening on port ${config.listenPort}`);
         resolve(this.server);
       });
     });
