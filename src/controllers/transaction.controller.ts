@@ -55,25 +55,30 @@ export async function getTransactionHandler(req: Request, res: Response) {
 }
 
 export async function getTransactionsHandler(req: Request, res: Response) {
-  let { filter, options } = queryHandler({
-    populate: [
-      { path: "user", select: "name" },
-      { path: "warehouse", select: "name" },
-      { path: "items.item", select: "name" },
-    ],
-    sort: { txDate: "desc" },
-    limit: 10,
-    ...req.query,
-  }, "description");
+  let { filter, options } = queryHandler(
+    {
+      populate: [
+        { path: "user", select: "name" },
+        { path: "warehouse", select: "name" },
+        { path: "items.item", select: "name" },
+      ],
+      sort: { txDate: "desc" },
+      limit: 10,
+      ...req.query,
+    },
+    "description"
+  );
   if (req.query.filter) {
     filter = { ...filter, ...(req.query.filter as Object) };
   }
-  
+
   const itemCount = await countTransactions({ ...filter }).catch(() => 0);
   await getTransactions({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
-      const totalPages = options.limit ? Math.ceil(itemCount / options.limit) : 1;
+      const totalPages = options.limit
+        ? Math.ceil(itemCount / options.limit)
+        : 1;
       return res.status(200).send({ ...response, itemCount, totalPages });
     })
     .catch((err) => {
@@ -134,7 +139,7 @@ export async function deleteTransactionHandler(req: Request, res: Response) {
     });
 }
 
-export async function exportTransactionsHandler(req: Request, res: Response) {
+export function exportTransactionsHandler(req: Request, res: Response) {
   const { startDate, endDate, warehouse } = req.query;
   const filter = {
     txDate: {
@@ -151,10 +156,13 @@ export async function exportTransactionsHandler(req: Request, res: Response) {
         msg(400, null, 'Query invalid, "startDate" and "endDate" required!')
       );
 
-  await getTransactions(
+  getTransactions(
     { ...filter },
     {
-      populate: [{ path: "items.item", select: "name" }],
+      populate: [
+        { path: "warehouse", select: "name" },
+        { path: "items.item", select: "name" },
+      ],
     }
   )
     .then((data) => {
