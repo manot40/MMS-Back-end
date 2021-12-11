@@ -43,12 +43,12 @@ export async function getWarehousesHandler(req: Request, res: Response) {
     ...req.query,
   });
   
-  const count = await countWarehouses({ ...filter });
+  const itemCount = await countWarehouses({ ...filter });
   await getWarehouses({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
-      const totalPages = Math.ceil(count / options.limit);
-      return res.status(200).send({ ...response, totalPages });
+      const totalPages = Math.ceil(itemCount / options.limit);
+      return res.status(200).send({ ...response, itemCount, totalPages });
     })
     .catch((err) => {
       return res.status(500).send(msg(500, err.errors, err._message));

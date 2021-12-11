@@ -77,12 +77,12 @@ export async function getItemsHandler(req: Request, res: Response) {
     delete options.populate;
   }
   
-  const count = await countItems({ ...filter }).catch(() => 0);
+  const itemCount = await countItems({ ...filter }).catch(() => 0);
   await getItems({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
-      const totalPages = options.limit ? Math.ceil(count / options.limit) : 1;
-      return res.status(200).send({ ...response, totalPages });
+      const totalPages = options.limit ? Math.ceil(itemCount / options.limit) : 1;
+      return res.status(200).send({ ...response, itemCount, totalPages });
     })
     .catch((err) => {
       return res.status(500).send(msg(500, { ...err }, err.message));

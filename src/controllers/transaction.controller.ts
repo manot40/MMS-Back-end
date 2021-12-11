@@ -69,12 +69,12 @@ export async function getTransactionsHandler(req: Request, res: Response) {
     filter = { ...filter, ...(req.query.filter as Object) };
   }
   
-  const count = await countTransactions({ ...filter }).catch(() => 0);
+  const itemCount = await countTransactions({ ...filter }).catch(() => 0);
   await getTransactions({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
-      const totalPages = options.limit ? Math.ceil(count / options.limit) : 1;
-      return res.status(200).send({ ...response, totalPages });
+      const totalPages = options.limit ? Math.ceil(itemCount / options.limit) : 1;
+      return res.status(200).send({ ...response, itemCount, totalPages });
     })
     .catch((err) => {
       log.warn("Request Rejected on GetTransactions | " + err.message);
@@ -166,6 +166,7 @@ export async function exportTransactionsHandler(req: Request, res: Response) {
             name: e2.item.name,
             qty: e2.quantity,
             type: e1.type,
+            warehouse: e1.warehouse.name,
             description: e1.description,
           })
         );
