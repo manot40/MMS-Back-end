@@ -1,3 +1,4 @@
+import type { TransactionDocument as ITrxItem } from "models/transaction.model";
 import dayjs from "dayjs";
 import XLSX from "xlsx";
 import queryHandler from "../helpers/queryHandler";
@@ -23,9 +24,19 @@ async function verifyRequestIntegrity(_id: String, user: String, role: String) {
   }
 }
 
+function mergeDuplicate(arr: ITrxItem["items"]) {
+  const obj: any = {};
+  // @ts-ignore
+  const distinct: ITrxItem["items"] = [];
+  for (var i; (i = arr.shift()); obj[i.item] = +i.quantity + (+obj[i.item] || 0));
+  for (var x in obj) distinct.push({ item: x, quantity: +obj[x] });
+  return distinct;
+}
+
 export async function createTransactionHandler(req: Request, res: Response) {
   const user = get(req, "user._id");
   const { body } = req;
+  body.items = mergeDuplicate(body.items);
   body.status && delete body.status;
   const randId = nanoid("1234567890ABCDEF", 6);
   const txId = "TRX-" + body.type.toUpperCase() + "-" + randId();
@@ -92,6 +103,7 @@ export async function updateTransactionHandler(req: Request, res: Response) {
   const role = get(req, "user.role");
   const user = get(req, "user._id");
   const body = { ...req.body, user };
+  body.items = mergeDuplicate(body.items);
 
   const validity = await verifyRequestIntegrity(id, user, role);
   if (validity === "404") return res.status(404).send(msg(404, {}));
