@@ -5,6 +5,7 @@ import path from "path";
 import helmet from "helmet";
 import cluster from "cluster";
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import express, { urlencoded, json } from "express";
 
 // Config and Helpers utility
@@ -61,6 +62,7 @@ export default class Server {
     this.app.use(express.static(rootPath + "/"));
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cors(corsConfig));
+    this.app.use(cookieParser());
     this.app.use(compression());
     this.app.use(validateJWT);
     this.app.use(json());

@@ -66,41 +66,6 @@ servers:
     url: "/"
 
 paths:
-  /auth/register:
-    post:
-      tags:
-        - Authentication
-      summary: New User Registration
-      description: "Registering new user, providing basic user information in request body  (**Admin Role Required!**)"
-      security:
-       - bearerAuth: []
-      requestBody:
-        description: New User Information
-        content:
-          application/json:
-            schema:
-              required:
-                - password
-              allOf:
-                - $ref: "#/components/schemas/User"
-                - properties:
-                    password:
-                      type: string
-                      description: User password input
-        required: true
-      responses:
-        200:
-          $ref: "#/components/responses/User"
-        400:
-          $ref: "#/components/responses/400"
-        401:
-          $ref: "#/components/responses/401"
-        403:
-          $ref: "#/components/responses/403"
-        409:
-          $ref: "#/components/responses/409"
-        500:
-          $ref: "#/components/responses/500"
   /auth/login:
     post:
       tags:
@@ -184,6 +149,41 @@ paths:
                     description: JWT Access Token
         401:
           $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
+  /user/register:
+    post:
+      tags:
+        - Authentication
+      summary: New User Registration
+      description: "Registering new user, providing basic user information in request body  (**Admin Role Required!**)"
+      security:
+       - bearerAuth: []
+      requestBody:
+        description: New User Information
+        content:
+          application/json:
+            schema:
+              required:
+                - password
+              allOf:
+                - $ref: "#/components/schemas/User"
+                - properties:
+                    password:
+                      type: string
+                      description: User password input
+        required: true
+      responses:
+        200:
+          $ref: "#/components/responses/User"
+        400:
+          $ref: "#/components/responses/400"
+        401:
+          $ref: "#/components/responses/401"
+        403:
+          $ref: "#/components/responses/403"
+        409:
+          $ref: "#/components/responses/409"
         500:
           $ref: "#/components/responses/500"
   /user/logout:
