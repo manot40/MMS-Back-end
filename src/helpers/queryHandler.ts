@@ -7,7 +7,7 @@ interface IParams {
   limit?: number;
   page?: number;
   sort?: Object;
-  sortby?: string;
+  order?: string;
 }
 
 /**
@@ -34,7 +34,7 @@ export default (query: IParams, override?: string, callback?: () => void) => {
     options = { ...options, populate: query.populate };
   }
   if (query.sort) {
-    options.sort = { [query.sort.toString()]: query.sortby || "asc" };
+    options.sort = { [query.sort.toString()]: query.order || "asc" };
   }
 
   typeof callback !== "undefined" && callback();
