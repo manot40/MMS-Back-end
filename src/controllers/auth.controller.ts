@@ -1,7 +1,12 @@
-import config from "../config/jwt";
+import ms from "ms";
 import { get } from "lodash";
 import { Request, Response } from "express";
-import { createLogin } from "../services/user.service";
+
+import log from "../helpers/pino";
+import config from "../config/jwt";
+import { sign } from "../helpers/jwt";
+import msg from "../helpers/messenger";
+
 import {
   createSession,
   createAccessToken,
@@ -10,38 +15,48 @@ import {
   deleteSessions,
   reIssueAccessToken,
 } from "../services/auth.service";
-import msg from "../helpers/messenger";
-import { sign } from "../helpers/jwt";
-import log from "../helpers/pino";
+import { createLogin } from "../services/user.service";
 
 export async function createUserSessionHandler(req: Request, res: Response) {
   // validate the email and password
-  const user = await createLogin(req.body);
+  const user = (await createLogin(req.body)) as any;
+  const remember: boolean = req.body.rememberMe;
 
   if (!user) {
     return res.status(401).send(msg(401, {}, "Username atau password salah!"));
   }
 
   // Create a session
-  const session = await createSession(user._id.toString(), req.get("user-agent") || "");
+  const session = (await createSession(
+    user._id.toString(),
+    req.get("user-agent") || ""
+  )) as any;
+
+  const cookieConfig: any = {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV == "production",
+  };
 
   // create access token
-  // @ts-ignore
   const accessToken = createAccessToken({ user, session });
+  res.cookie("accessToken", accessToken, {
+    ...cookieConfig,
+    maxAge: ms(config.accessTokenTTL),
+  });
 
   // create refresh token
   let refreshToken;
-
-  if (req.body.rememberMe as boolean) {
-    refreshToken = sign(session, {
-      expiresIn: config.refreshTokenTTL, // 1 year
+  if (remember) {
+    refreshToken = sign(session, { expiresIn: config.refreshTokenTTL });
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieConfig,
+      maxAge: ms(config.refreshTokenTTL),
     });
-  } else {
-    refreshToken = accessToken;
   }
 
   // send refresh & access token back
-  return res.send({ accessToken, refreshToken });
+  return res.send(msg(200, { accessToken, refreshToken }, "Login berhasil!"));
 }
 
 export async function invalidateUserSessionHandler(
@@ -52,19 +67,24 @@ export async function invalidateUserSessionHandler(
 
   await updateSession({ _id: sessionId }, { valid: false });
 
-  return res.sendStatus(200);
+  return res
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken")
+    .send(msg(200, {}, "Logout berhasil!"));
 }
 
 export async function refreshAccessToken(req: Request, res: Response) {
-  const refreshToken = req.body;
-  await reIssueAccessToken({ ...refreshToken })
+  const refreshToken = req.cookies.refreshToken;
+  await reIssueAccessToken(refreshToken)
     .then((accessToken) => {
       if (!accessToken) {
         return res
           .status(401)
-          .send({ data: { ...refreshToken }, message: "Already logged out" });
+          .send(msg(401, { ...refreshToken }, "Already logged out"));
       }
-      return res.status(200).send({ accessToken });
+      return res
+        .status(200)
+        .send(msg(200, { accessToken }, "Session refreshed"));
     })
     .catch((err) => {
       log.error("Rejected Request on reIssueAccessToken | " + err);

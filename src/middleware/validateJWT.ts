@@ -1,19 +1,22 @@
+import ms from "ms";
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
+
+import config from "../config/jwt";
 import { decode } from "../helpers/jwt";
 import { reIssueAccessToken } from "../services/auth.service";
 
-const deserializeUser = async (
+const validateJWT = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = get(req, "headers.authorization", "").replace(
-    /^Bearer\s/,
-    ""
-  );
+  const accessToken =
+    req.cookies.accessToken ||
+    get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
 
-  const refreshToken = get(req, "headers.x-refresh");
+  const refreshToken =
+    req.cookies.refreshToken || get(req, "headers.refreshToken", "");
 
   if (!accessToken) return next();
 
@@ -27,11 +30,20 @@ const deserializeUser = async (
   }
 
   if (expired && refreshToken) {
-    const newAccessToken = await reIssueAccessToken({ refreshToken });
+    const newAccessToken = await reIssueAccessToken(refreshToken);
 
     if (newAccessToken) {
       // Add the new access token to the response header
-      res.setHeader("x-access-token", newAccessToken);
+      if (req.cookies.accessToken) {
+        res.cookie("accessToken", newAccessToken, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: ms(config.accessTokenTTL),
+          secure: process.env.NODE_ENV == "production",
+        });
+      } else {
+        res.setHeader("x-access-token", newAccessToken);
+      }
 
       const { decoded } = decode(newAccessToken);
 
@@ -45,4 +57,4 @@ const deserializeUser = async (
   return next();
 };
 
-export default deserializeUser;
+export default validateJWT;

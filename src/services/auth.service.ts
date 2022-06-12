@@ -33,13 +33,9 @@ export function createAccessToken({
   return accessToken;
 }
 
-export async function reIssueAccessToken({
-  refreshToken,
-}: {
-  refreshToken: string;
-}) {
+export async function reIssueAccessToken(token: string) {
   // Decode the refresh token
-  const { decoded } = decode(refreshToken);
+  const { decoded } = decode(token);
   if (!decoded || !get(decoded, "_id")) return false;
 
   // Get the session
