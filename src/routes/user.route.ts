@@ -14,7 +14,7 @@ let route = Router();
 
 route.post(
   "/register",
-  new requireAuth("asAdmin").verify,
+  requireAuth("asAdmin"),
   validateRequest(createUserSchema),
   createUserHandler
 );

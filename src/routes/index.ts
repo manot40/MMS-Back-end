@@ -14,23 +14,22 @@ import AdminItem from "./admin/item.route";
 import AdminWarehouse from "./admin/warehouse.route";
 import AdminTransaction from "./admin/transaction.route";
 
-let router = Router();
-const verifyUser = (role?: string) => new requireAuth(role).verify;
+const router = Router();
 
 router.use("/", Default);
 router.use("/install", Install);
 
 // Standard user route
 router.use("/auth", Auth);
-router.use("/user", verifyUser(), User);
-router.use("/item", verifyUser(), Item);
-router.use("/warehouse", verifyUser(), Warehouse);
-router.use("/transaction", verifyUser(), Transaction);
+router.use("/user", requireAuth(), User);
+router.use("/item", requireAuth(), Item);
+router.use("/warehouse", requireAuth(), Warehouse);
+router.use("/transaction", requireAuth(), Transaction);
 
 // Administrator route
-router.use("/admin/users", verifyUser("asAdmin"), AdminUsers);
-router.use("/admin/item", verifyUser("asAdmin"), AdminItem);
-router.use("/admin/warehouse", verifyUser("asAdmin"), AdminWarehouse);
-router.use("/admin/transaction", verifyUser("asAdmin"), AdminTransaction);
+router.use("/admin/users", requireAuth("asAdmin"), AdminUsers);
+router.use("/admin/item", requireAuth("asAdmin"), AdminItem);
+router.use("/admin/warehouse", requireAuth("asAdmin"), AdminWarehouse);
+router.use("/admin/transaction", requireAuth("asAdmin"), AdminTransaction);
 
 export default router;
