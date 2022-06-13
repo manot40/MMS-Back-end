@@ -20,11 +20,19 @@ export function findTransaction(query: FilterQuery<TransactionDocument>, options
   });
 }
 
-export function getTransactions(query: FilterQuery<TransactionDocument> = {}, options: QueryOptions = { lean: true }, projection: any = null) {
+export function getTransactions(
+  query: FilterQuery<TransactionDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Transaction.find(query, projection, options);
 }
 
-export function updateTransaction(query: FilterQuery<TransactionDocument>, update: UpdateQuery<TransactionDocument>, options: QueryOptions) {
+export function updateTransaction(
+  query: FilterQuery<TransactionDocument>,
+  update: UpdateQuery<TransactionDocument>,
+  options: QueryOptions
+) {
   return Transaction.findOneAndUpdate(query, update, options);
 }
 

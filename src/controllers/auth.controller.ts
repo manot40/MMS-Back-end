@@ -7,7 +7,14 @@ import config from '../config/jwt';
 import { sign } from '../helpers/jwt';
 import msg from '../helpers/messenger';
 
-import { createSession, createAccessToken, updateSession, findSessions, deleteSessions, reIssueAccessToken } from '../services/auth.service';
+import {
+  createSession,
+  createAccessToken,
+  updateSession,
+  findSessions,
+  deleteSessions,
+  reIssueAccessToken,
+} from '../services/auth.service';
 import { createLogin } from '../services/user.service';
 
 export async function createUserSessionHandler(req: Request, res: Response) {

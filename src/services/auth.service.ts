@@ -40,7 +40,9 @@ export async function reIssueAccessToken(token: string) {
   // Make sure the session is still valid
   if (!session || !session?.valid) return false;
 
-  const user = await findUser({ _id: session.user }, '_id username').catch((err) => log.error('Fail service to reIssueAccessToken | ' + err));
+  const user = await findUser({ _id: session.user }, '_id username').catch((err) =>
+    log.error('Fail service to reIssueAccessToken | ' + err)
+  );
 
   if (!user) {
     return false;

@@ -2,7 +2,14 @@ import { Response, Request } from 'express';
 import queryHandler from '../helpers/queryHandler';
 import { get } from 'lodash';
 import msg from '../helpers/messenger';
-import { createWarehouse, countWarehouses, updateWarehouse, findWarehouse, getWarehouses, deleteWarehouse } from '../services/warehouse.service';
+import {
+  createWarehouse,
+  countWarehouses,
+  updateWarehouse,
+  findWarehouse,
+  getWarehouses,
+  deleteWarehouse,
+} from '../services/warehouse.service';
 
 export async function createWarehouseHandler(req: Request, res: Response) {
   const user = get(req, 'user._id');

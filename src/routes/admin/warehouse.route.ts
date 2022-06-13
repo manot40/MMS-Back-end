@@ -7,7 +7,11 @@ import validateRequest from '../../helpers/validateRequest';
 import { createWarehouseSchema, updateWarehouseSchema, deleteWarehouseSchema } from '../../schemas/warehouse.schema';
 
 // Controllers
-import { createWarehouseHandler, updateWarehouseHandler, deleteWarehouseHandler } from '../../controllers/warehouse.controller';
+import {
+  createWarehouseHandler,
+  updateWarehouseHandler,
+  deleteWarehouseHandler,
+} from '../../controllers/warehouse.controller';
 
 let route = Router();
 

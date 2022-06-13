@@ -5,7 +5,9 @@ import config from '../config/database';
 export default class db {
   public static async connect() {
     return mongoose
-      .connect(`mongodb+srv://${config.dbUsername}:${config.dbPassword}@${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`)
+      .connect(
+        `mongodb+srv://${config.dbUsername}:${config.dbPassword}@${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`
+      )
       .then(() => log.info(`(MongoDB) Connected to ${config.dbHost}`))
       .catch((err) => {
         log.error('(MongoDB) Failed to create connection ' + err);

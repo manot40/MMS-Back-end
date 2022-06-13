@@ -7,7 +7,12 @@ import validateRequest from '../../helpers/validateRequest';
 import { createItemSchema, updateItemSchema, deleteItemSchema, createManySchema } from '../../schemas/item.schema';
 
 // Controllers
-import { createItemHandler, updateItemHandler, deleteItemHandler, importItemsDataHandler } from '../../controllers/item.controller';
+import {
+  createItemHandler,
+  updateItemHandler,
+  deleteItemHandler,
+  importItemsDataHandler,
+} from '../../controllers/item.controller';
 
 let route = Router();
 

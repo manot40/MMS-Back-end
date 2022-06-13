@@ -13,11 +13,19 @@ export function createManyItem(input: SchemaDefinition<ItemDocument>) {
   return Item.insertMany(input);
 }
 
-export function findItem(query: FilterQuery<ItemDocument>, options: QueryOptions = { lean: true }, projection: any = null) {
+export function findItem(
+  query: FilterQuery<ItemDocument>,
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Item.findOne(query, projection, options);
 }
 
-export function getItems(query: FilterQuery<ItemDocument> = {}, options: QueryOptions = { lean: true }, projection: any = null) {
+export function getItems(
+  query: FilterQuery<ItemDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Item.find(query, projection, options);
 }
 

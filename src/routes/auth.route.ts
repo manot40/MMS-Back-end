@@ -7,7 +7,12 @@ import validateRequest from '../helpers/validateRequest';
 import { createUserSessionSchema } from '../schemas/session.schema';
 
 // Controllers
-import { createUserSessionHandler, getUserSessionHandler, invalidateUserSessionHandler, refreshAccessToken } from '../controllers/auth.controller';
+import {
+  createUserSessionHandler,
+  getUserSessionHandler,
+  invalidateUserSessionHandler,
+  refreshAccessToken,
+} from '../controllers/auth.controller';
 
 let route = Router();
 

@@ -155,7 +155,8 @@ export function exportTransactionsHandler(req: Request, res: Response) {
   };
   if (warehouse) Object.assign(filter, { warehouse });
 
-  if (!startDate || !endDate) return res.status(400).send(msg(400, null, 'Query invalid, "startDate" and "endDate" required!'));
+  if (!startDate || !endDate)
+    return res.status(400).send(msg(400, null, 'Query invalid, "startDate" and "endDate" required!'));
 
   getTransactions(
     { ...filter },

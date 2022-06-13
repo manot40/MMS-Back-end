@@ -70,7 +70,7 @@
     "endOfLine": "lf",
     "arrowParens": "always",
     "bracketSpacing": true,
-    "printWidth": 150,
+    "printWidth": 120,
     "singleQuote": true
   }
 }

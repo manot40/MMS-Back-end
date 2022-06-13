@@ -8,7 +8,10 @@ const params = {
 const payload = {
   body: object({
     name: string(),
-    unit: string().matches(/(PCS|KG|LTR|BTL|SET|PSG|MTR|GLN)/, 'Item unit must contain either PCS, KG, LTR, BTL, SET, PSG'),
+    unit: string().matches(
+      /(PCS|KG|LTR|BTL|SET|PSG|MTR|GLN)/,
+      'Item unit must contain either PCS, KG, LTR, BTL, SET, PSG'
+    ),
     type: string().matches(/(chemical|consumable)/, 'Item type must contain either consumable or chemical'),
   }),
 };

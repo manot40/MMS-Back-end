@@ -13,15 +13,27 @@ export async function checkIfWarehouseExist(query: FilterQuery<WarehouseDocument
   return await Warehouse.exists(query);
 }
 
-export function findWarehouse(query: FilterQuery<WarehouseDocument>, options: QueryOptions = { lean: true }, projection: any = null) {
+export function findWarehouse(
+  query: FilterQuery<WarehouseDocument>,
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Warehouse.findOne(query, projection, options);
 }
 
-export function getWarehouses(query: FilterQuery<WarehouseDocument> = {}, options: QueryOptions = { lean: true }, projection: any = null) {
+export function getWarehouses(
+  query: FilterQuery<WarehouseDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Warehouse.find(query, projection, options).populate([{ path: 'user', select: 'name' }]);
 }
 
-export function updateWarehouse(query: FilterQuery<WarehouseDocument>, update: UpdateQuery<WarehouseDocument>, options: QueryOptions) {
+export function updateWarehouse(
+  query: FilterQuery<WarehouseDocument>,
+  update: UpdateQuery<WarehouseDocument>,
+  options: QueryOptions
+) {
   return Warehouse.findOneAndUpdate(query, update, options);
 }
 

@@ -9,15 +9,27 @@ export async function checkIfInvExist(query: FilterQuery<InventoryDocument>) {
   return await Inventory.exists(query);
 }
 
-export function findInventory(query: FilterQuery<InventoryDocument>, options: QueryOptions = { lean: true }, projection: any = null) {
+export function findInventory(
+  query: FilterQuery<InventoryDocument>,
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Inventory.findOne(query, projection, options);
 }
 
-export function getInventories(query: FilterQuery<InventoryDocument> = {}, options: QueryOptions = { lean: true }, projection: any = null) {
+export function getInventories(
+  query: FilterQuery<InventoryDocument> = {},
+  options: QueryOptions = { lean: true },
+  projection: any = null
+) {
   return Inventory.find(query, projection, options);
 }
 
-export function updateInventory(query: FilterQuery<InventoryDocument>, update: UpdateQuery<InventoryDocument>, options: QueryOptions) {
+export function updateInventory(
+  query: FilterQuery<InventoryDocument>,
+  update: UpdateQuery<InventoryDocument>,
+  options: QueryOptions
+) {
   return Inventory.findOneAndUpdate(query, update, options);
 }
 
