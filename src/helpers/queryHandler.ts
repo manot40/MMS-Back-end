@@ -1,5 +1,5 @@
-import { QueryOptions } from "mongoose";
-import regexp from "../helpers/escapeRegex";
+import { QueryOptions } from 'mongoose';
+import regexp from '../helpers/escapeRegex';
 
 interface IParams {
   populate?: Array<{ path: string; select?: string }>;
@@ -21,8 +21,8 @@ export default (query: IParams, override?: string, callback?: () => void) => {
   let options: QueryOptions = {};
 
   if (query.search) {
-    const $regex = new RegExp(regexp(query.search as string), "i");
-    filter = { ...filter, [override || "name"]: { $regex } };
+    const $regex = new RegExp(regexp(query.search as string), 'i');
+    filter = { ...filter, [override || 'name']: { $regex } };
   }
   if (query.limit) {
     options.limit = +query.limit;
@@ -34,10 +34,10 @@ export default (query: IParams, override?: string, callback?: () => void) => {
     options = { ...options, populate: query.populate };
   }
   if (query.sort) {
-    options.sort = { [query.sort.toString()]: query.order || "asc" };
+    options.sort = { [query.sort.toString()]: query.order || 'asc' };
   }
 
-  typeof callback !== "undefined" && callback();
+  typeof callback !== 'undefined' && callback();
 
   return { filter, options };
 };

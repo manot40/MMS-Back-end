@@ -1,21 +1,15 @@
-import { array, object, string } from "yup";
+import { array, object, string } from 'yup';
 
 const params = {
   params: object({
-    itemId: string().required("Item ID is required"),
+    itemId: string().required('Item ID is required'),
   }),
 };
 const payload = {
   body: object({
     name: string(),
-    unit: string().matches(
-      /(PCS|KG|LTR|BTL|SET|PSG|MTR|GLN)/,
-      "Item unit must contain either PCS, KG, LTR, BTL, SET, PSG"
-    ),
-    type: string().matches(
-      /(chemical|consumable)/,
-      "Item type must contain either consumable or chemical"
-    ),
+    unit: string().matches(/(PCS|KG|LTR|BTL|SET|PSG|MTR|GLN)/, 'Item unit must contain either PCS, KG, LTR, BTL, SET, PSG'),
+    type: string().matches(/(chemical|consumable)/, 'Item type must contain either consumable or chemical'),
   }),
 };
 
@@ -29,10 +23,7 @@ export const createManySchema = object({
       object({
         name: string(),
         unit: string(),
-        type: string().matches(
-          /(chemical|consumable)/,
-          "Item type must contain either consumable or chemical"
-        ),
+        type: string().matches(/(chemical|consumable)/, 'Item type must contain either consumable or chemical'),
       })
     ),
   }),

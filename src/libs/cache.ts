@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import Redis from "ioredis";
+import mongoose from 'mongoose';
+import Redis from 'ioredis';
 
-import config from "../config/cache";
-import log from "../helpers/pino";
+import config from '../config/cache';
+import log from '../helpers/pino';
 
 let redis: Redis;
 
@@ -14,11 +14,11 @@ if (config.host) {
     password: config.password,
   });
 
-  redis.on("ready", () => {
+  redis.on('ready', () => {
     log.info(`(Redis) Connected to ${config.host}`);
   });
 
-  redis.on("close", () => {
+  redis.on('close', () => {
     log.warn(`(Redis) Database connection closed!`);
   });
 }
@@ -28,7 +28,7 @@ function useRedis() {
 
   mongoose.Query.prototype.cache = function (options: CacheOptions = {}) {
     this.useCache = true;
-    this.hashKey = JSON.stringify(options.key || "default");
+    this.hashKey = JSON.stringify(options.key || 'default');
     return this;
   };
 
@@ -48,14 +48,12 @@ function useRedis() {
     if (cached) {
       const parsed = JSON.parse(cached);
 
-      return Array.isArray(parsed)
-        ? parsed.map((doc) => new this.model(doc))
-        : new this.model(parsed);
+      return Array.isArray(parsed) ? parsed.map((doc) => new this.model(doc)) : new this.model(parsed);
     }
 
     const result = await exec.apply(this, arguments);
 
-    redis.hmset(this.hashKey, key, JSON.stringify(result), "EX", 300);
+    redis.hmset(this.hashKey, key, JSON.stringify(result), 'EX', 300);
 
     return result;
   };

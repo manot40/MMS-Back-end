@@ -1,11 +1,11 @@
-import config from "../config/jwt";
-import { LeanDocument, FilterQuery, UpdateQuery } from "mongoose";
-import { get } from "lodash";
-import { UserDocument } from "../models/user.model";
-import Session, { SessionDocument } from "../models/session.model";
-import { sign, decode } from "../helpers/jwt";
-import { findUser } from "./user.service";
-import log from "../helpers/pino";
+import config from '../config/jwt';
+import { LeanDocument, FilterQuery, UpdateQuery } from 'mongoose';
+import { get } from 'lodash';
+import { UserDocument } from '../models/user.model';
+import Session, { SessionDocument } from '../models/session.model';
+import { sign, decode } from '../helpers/jwt';
+import { findUser } from './user.service';
+import log from '../helpers/pino';
 
 export async function createSession(userId: string, userAgent: string) {
   const session = await Session.create({ user: userId, userAgent });
@@ -17,12 +17,8 @@ export function createAccessToken({
   user,
   session,
 }: {
-  user:
-    | Omit<UserDocument, "password">
-    | LeanDocument<Omit<UserDocument, "password">>;
-  session:
-    | Omit<SessionDocument, "password">
-    | LeanDocument<Omit<SessionDocument, "password">>;
+  user: Omit<UserDocument, 'password'> | LeanDocument<Omit<UserDocument, 'password'>>;
+  session: Omit<SessionDocument, 'password'> | LeanDocument<Omit<SessionDocument, 'password'>>;
 }) {
   // Build and return the new access token
   const accessToken = sign(
@@ -36,17 +32,15 @@ export function createAccessToken({
 export async function reIssueAccessToken(token: string) {
   // Decode the refresh token
   const { decoded } = decode(token);
-  if (!decoded || !get(decoded, "_id")) return false;
+  if (!decoded || !get(decoded, '_id')) return false;
 
   // Get the session
-  const session = await Session.findById(get(decoded, "_id"));
+  const session = await Session.findById(get(decoded, '_id'));
 
   // Make sure the session is still valid
   if (!session || !session?.valid) return false;
 
-  const user = await findUser({ _id: session.user }, "_id username").catch(
-    (err) => log.error("Fail service to reIssueAccessToken | " + err)
-  );
+  const user = await findUser({ _id: session.user }, '_id username').catch((err) => log.error('Fail service to reIssueAccessToken | ' + err));
 
   if (!user) {
     return false;
@@ -57,10 +51,7 @@ export async function reIssueAccessToken(token: string) {
   return accessToken;
 }
 
-export async function updateSession(
-  query: FilterQuery<SessionDocument>,
-  update: UpdateQuery<SessionDocument>
-) {
+export async function updateSession(query: FilterQuery<SessionDocument>, update: UpdateQuery<SessionDocument>) {
   return Session.updateOne(query, update);
 }
 

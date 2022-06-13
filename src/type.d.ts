@@ -1,9 +1,5 @@
-declare module "mongoose" {
-  interface DocumentQuery<
-    T,
-    DocType extends import("mongoose").Document,
-    QueryHelpers = {}
-  > {
+declare module 'mongoose' {
+  interface DocumentQuery<T, DocType extends import('mongoose').Document, QueryHelpers = {}> {
     mongooseCollection: {
       name: any;
     };
@@ -12,10 +8,9 @@ declare module "mongoose" {
     hashKey: string;
   }
 
-  interface Query<ResultType, DocType, THelpers = {}, RawDocType = DocType>
-    extends DocumentQuery<any, any> {}
+  interface Query<ResultType, DocType, THelpers = {}, RawDocType = DocType> extends DocumentQuery<any, any> {}
 }
 
 type CacheOptions = {
   key?: string;
-}
+};

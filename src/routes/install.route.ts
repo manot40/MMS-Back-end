@@ -1,6 +1,6 @@
-import { importItemsFromExcel } from "../controllers/install.controller";
-import { Router } from "express";
-import multer from "multer";
+import { importItemsFromExcel } from '../controllers/install.controller';
+import { Router } from 'express';
+import multer from 'multer';
 
 // Script
 const upload = multer();
@@ -11,10 +11,10 @@ const upload = multer();
 
 let route = Router();
 
-route.get("/", (req, res) => {
+route.get('/', (req, res) => {
   res.sendStatus(200);
 });
 
-route.post("/import/items", upload.single("importFile"), importItemsFromExcel);
+route.post('/import/items', upload.single('importFile'), importItemsFromExcel);
 
 export default route;

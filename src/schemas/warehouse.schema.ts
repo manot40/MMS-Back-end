@@ -1,8 +1,8 @@
-import { object, string } from "yup";
+import { object, string } from 'yup';
 
 const params = {
   params: object({
-    warehouseId: string().required("Warehouse ID is required"),
+    warehouseId: string().required('Warehouse ID is required'),
   }),
 };
 const payload = {

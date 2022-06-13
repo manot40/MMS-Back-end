@@ -1,33 +1,19 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 // Helpers
-import validateRequest from "../../helpers/validateRequest";
+import validateRequest from '../../helpers/validateRequest';
 
 // Schemas
-import {
-  createItemSchema,
-  updateItemSchema,
-  deleteItemSchema,
-  createManySchema,
-} from "../../schemas/item.schema";
+import { createItemSchema, updateItemSchema, deleteItemSchema, createManySchema } from '../../schemas/item.schema';
 
 // Controllers
-import {
-  createItemHandler,
-  updateItemHandler,
-  deleteItemHandler,
-  importItemsDataHandler,
-} from "../../controllers/item.controller";
+import { createItemHandler, updateItemHandler, deleteItemHandler, importItemsDataHandler } from '../../controllers/item.controller';
 
 let route = Router();
 
-route.post("/", validateRequest(createItemSchema), createItemHandler);
-route.post(
-  "/batch",
-  validateRequest(createManySchema),
-  importItemsDataHandler
-);
-route.put("/:itemId", validateRequest(updateItemSchema), updateItemHandler);
-route.delete("/:itemId", validateRequest(deleteItemSchema), deleteItemHandler);
+route.post('/', validateRequest(createItemSchema), createItemHandler);
+route.post('/batch', validateRequest(createManySchema), importItemsDataHandler);
+route.put('/:itemId', validateRequest(updateItemSchema), updateItemHandler);
+route.delete('/:itemId', validateRequest(deleteItemSchema), deleteItemHandler);
 
 export default route;

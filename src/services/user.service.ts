@@ -1,6 +1,6 @@
-import { omit } from "lodash";
-import { SchemaDefinition, FilterQuery } from "mongoose";
-import User, { UserDocument } from "../models/user.model";
+import { omit } from 'lodash';
+import { SchemaDefinition, FilterQuery } from 'mongoose';
+import User, { UserDocument } from '../models/user.model';
 
 export async function createUser(input: SchemaDefinition<UserDocument>) {
   return await User.create(input).catch((err) => {
@@ -8,25 +8,16 @@ export async function createUser(input: SchemaDefinition<UserDocument>) {
   });
 }
 
-export async function findUser(
-  query: FilterQuery<UserDocument>,
-  selection: string
-) {
+export async function findUser(query: FilterQuery<UserDocument>, selection: string) {
   return User.findOne(query).lean().select(selection);
 }
 
 export async function checkAdminRole(id: string) {
-  return await User.exists({ _id: id, role: "admin" });
+  return await User.exists({ _id: id, role: 'admin' });
 }
 
-export async function createLogin({
-  username,
-  password,
-}: {
-  username: UserDocument["username"];
-  password: string;
-}) {
-  const user = await User.findOne({ username }, "_id username password role");
+export async function createLogin({ username, password }: { username: UserDocument['username']; password: string }) {
+  const user = await User.findOne({ username }, '_id username password role');
 
   if (!user) {
     return false;
@@ -37,5 +28,5 @@ export async function createLogin({
   if (!isValid) {
     return false;
   }
-  return omit(user.toJSON(), "password");
+  return omit(user.toJSON(), 'password');
 }

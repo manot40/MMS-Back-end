@@ -1,5 +1,5 @@
-import config from "../config/jwt";
-import jwt from "jsonwebtoken";
+import config from '../config/jwt';
+import jwt from 'jsonwebtoken';
 
 const privateKey = config.privateKey as string;
 
@@ -15,7 +15,7 @@ export function decode(token: string) {
   } catch (error) {
     return {
       valid: false,
-      expired: error.message === "jwt expired",
+      expired: error.message === 'jwt expired',
       decoded: null,
     };
   }

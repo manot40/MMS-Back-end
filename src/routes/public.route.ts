@@ -1,5 +1,5 @@
-import config from "../config/app";
-import { Router } from "express";
+import config from '../config/app';
+import { Router } from 'express';
 
 // Scripts
 
@@ -9,8 +9,8 @@ import { Router } from "express";
 
 let route = Router();
 
-route.get("/", (_req, res) => {
-  res.type("html").send(
+route.get('/', (_req, res) => {
+  res.type('html').send(
     Buffer.from(
       `<!DOCTYPE html>
         <html lang="en">

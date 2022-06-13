@@ -1,23 +1,12 @@
-import { Response, Request } from "express";
-import { get } from "lodash";
-import msg from "../helpers/messenger";
-import { TransactionDocument } from "../models/transaction.model";
-import { updateTransaction } from "../services/transaction.service";
-import { updateWarehouse } from "../services/warehouse.service";
-import {
-  createInventory,
-  updateInventory,
-  findInventory,
-  getInventories,
-  deleteInventory,
-  checkIfInvExist,
-} from "../services/inventory.service";
+import { Response, Request } from 'express';
+import { get } from 'lodash';
+import msg from '../helpers/messenger';
+import { TransactionDocument } from '../models/transaction.model';
+import { updateTransaction } from '../services/transaction.service';
+import { updateWarehouse } from '../services/warehouse.service';
+import { createInventory, updateInventory, findInventory, getInventories, deleteInventory, checkIfInvExist } from '../services/inventory.service';
 
-function getInventoryDataFromArray(
-  arr1: TransactionDocument["items"],
-  arr2: TransactionDocument["items"],
-  inverse: boolean
-) {
+function getInventoryDataFromArray(arr1: TransactionDocument['items'], arr2: TransactionDocument['items'], inverse: boolean) {
   return arr1.filter((el1) => {
     if (inverse)
       return !arr2.some((el2) => {

@@ -1,10 +1,10 @@
 require('dotenv').config();
-import { cpus } from "os";
+import { cpus } from 'os';
 // App Settings
 const appConfig = {
   listenPort: +process.env.PORT || +process.env.SVR_PORT || 6000,
-  appHost: process.env.SVR_HOST || "localhost",
-  enableCluster: process.env.CLUSTER === "true" || false,
+  appHost: process.env.SVR_HOST || 'localhost',
+  enableCluster: process.env.CLUSTER === 'true' || false,
   clusterThread: +process.env.THREAD_LIMIT || cpus().length,
 };
 export default appConfig;

@@ -1,16 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 // Middleware
 
 // Schemas
 
 // Controllers
-import {
-  exportTransactionsHandler
-} from "../../controllers/transaction.controller";
+import { exportTransactionsHandler } from '../../controllers/transaction.controller';
 
 let route = Router();
 
-route.get("/export", exportTransactionsHandler);
+route.get('/export', exportTransactionsHandler);
 
 export default route;
