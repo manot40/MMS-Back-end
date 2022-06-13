@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-// Middleware
-import { validateRequest } from "../middleware";
+// Helpers
+import validateRequest from "../helpers/validateRequest";
 
 // Schemas
 import { createUserSessionSchema } from "../schemas/session.schema";

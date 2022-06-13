@@ -76,12 +76,14 @@ export async function getItemsHandler(req: Request, res: Response) {
     if (!req.query.limit) delete options.limit;
     delete options.populate;
   }
-  
+
   const itemCount = await countItems({ ...filter }).catch(() => 0);
   await getItems({ ...filter }, { ...options })
     .then((data) => {
       const response = msg(200, data);
-      const totalPages = options.limit ? Math.ceil(itemCount / options.limit) : 1;
+      const totalPages = options.limit
+        ? Math.ceil(itemCount / options.limit)
+        : 1;
       return res.status(200).send({ ...response, itemCount, totalPages });
     })
     .catch((err) => {

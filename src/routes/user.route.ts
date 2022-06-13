@@ -1,8 +1,9 @@
 import { getUserInformationHandler } from "../controllers/user.controller";
 import { Router } from "express";
 
-// Middleware
-import { validateRequest, requireAuth } from "../middleware";
+// Middleware and Helpers
+import validateRequest from "../helpers/validateRequest";
+import { requireAuth } from "../middleware";
 
 // Schemas
 import { createUserSchema } from "../schemas/user.schema";

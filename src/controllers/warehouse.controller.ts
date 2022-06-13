@@ -42,7 +42,7 @@ export async function getWarehousesHandler(req: Request, res: Response) {
     sort: { name: "asc" },
     ...req.query,
   });
-  
+
   const itemCount = await countWarehouses({ ...filter });
   await getWarehouses({ ...filter }, { ...options })
     .then((data) => {
