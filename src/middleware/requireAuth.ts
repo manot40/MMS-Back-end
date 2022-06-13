@@ -5,8 +5,8 @@ import msg from "../helpers/messenger";
 
 type Role = "asAdmin" | "asUser";
 
-function requireAuth(role?: Role) {
-  async function verify(req: Request, res: Response, next: NextFunction) {
+const requireAuth =
+  (role?: Role) => async (req: Request, res: Response, next: NextFunction) => {
     const user = get(req, "user");
 
     if (!user)
@@ -18,8 +18,6 @@ function requireAuth(role?: Role) {
     }
 
     return next();
-  }
-  return verify;
-}
+  };
 
 export default requireAuth;

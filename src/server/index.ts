@@ -1,7 +1,6 @@
 // Dependencies
 import cors from "cors";
 import http from "http";
-import path from "path";
 import helmet from "helmet";
 import cluster from "cluster";
 import compression from "compression";
@@ -57,10 +56,9 @@ export default class Server {
   }
 
   private setupMiddleware() {
-    const rootPath = path.join(process.cwd());
     this.app.use(helmet({ contentSecurityPolicy: false }));
-    this.app.use(express.static(rootPath + "/"));
     this.app.use(urlencoded({ extended: true }));
+    this.app.use(express.static("public"));
     this.app.use(cors(corsConfig));
     this.app.use(cookieParser());
     this.app.use(compression());

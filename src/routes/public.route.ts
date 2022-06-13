@@ -1,7 +1,5 @@
-import serveIndex from "serve-index";
 import config from "../config/app";
 import { Router } from "express";
-import path from "path";
 
 // Scripts
 
@@ -10,9 +8,7 @@ import path from "path";
 // Controllers
 
 let route = Router();
-const rootPath = path.join(process.cwd());
 
-route.use("/public", serveIndex(rootPath + "/public"));
 route.get("/", (_req, res) => {
   res.type("html").send(
     Buffer.from(
@@ -33,7 +29,7 @@ route.get("/", (_req, res) => {
             />
           </head>
           <body style="height: 100vh">
-            <elements-api apiDescriptionUrl="${config.appHost}/public/spec.yml" router="hash" layout="sidebar" />
+            <elements-api apiDescriptionUrl="/spec.yml" router="hash" layout="sidebar" />
           </body>
         </html>
       `

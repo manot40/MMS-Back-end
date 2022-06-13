@@ -140,18 +140,12 @@ paths:
         - Authentication
       summary: Refresh User accessToken
       description: "Requesting new accessToken by providing active refreshToken to server"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - refreshToken
-              properties:
-                refreshToken:
-                  type: string
-                  description: User active refresh token
-        required: true
+      parameters:
+        - in: header
+          name: refreshToken
+          required: true
+          schema: 
+            type: string
       responses:
         200:
           description: Refresh Token Accepted, new accessToken will be sent
@@ -160,9 +154,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  accessToken:
+                  success:
+                    type: boolean
+                  message:
                     type: string
-                    description: JWT Access Token
+                    description: Response Message
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        description: JWT Access Token
         401:
           $ref: "#/components/responses/401"
         500:
@@ -175,6 +177,7 @@ paths:
       description: "Logging out current user, and void user authentication token"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       responses:
         200:
           description: User logged out successfully
@@ -188,6 +191,7 @@ paths:
       description: "Registering new user, providing basic user information in request body  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         description: New User Information
         content:
@@ -223,6 +227,7 @@ paths:
       description: "Fetch current logged in user information, this is useful for setting up user state in client app"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       responses:
         200:
           $ref: "#/components/responses/User"
@@ -236,6 +241,7 @@ paths:
       description: "Get list of available warehouses, you can use query parameter to specify data querying rule"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/Limit"
         - $ref: "#/components/parameters/Page"
@@ -273,6 +279,7 @@ paths:
       description: "Get warehouse data by specifying warehouse Object ID"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -292,6 +299,7 @@ paths:
       description: "Create New Warehouse Data, providing warehouse information in document body  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         description: New Warehouse Information
         content:
@@ -316,6 +324,7 @@ paths:
       description: "Update existing Warehouse Data, providing warehouse information in document body  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       requestBody:
@@ -343,6 +352,7 @@ paths:
       description: "Delete existing Warehouse Data, providing warehouse id in path  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -368,6 +378,7 @@ paths:
       description: "Get list of available items, you can use query parameter to specify data querying rule"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/Warehouse"
         - $ref: "#/components/parameters/Limit"
@@ -390,6 +401,7 @@ paths:
       description: "Get item data by specifying warehouse Object ID"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -409,6 +421,7 @@ paths:
       description: "Create New Item Data, providing Item information in document body  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -431,6 +444,7 @@ paths:
       description: "Create Batch of new Items Data, providing Items information in document body as array  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -458,6 +472,7 @@ paths:
       description: "Update existing Item Data, providing Item information in document body  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       requestBody:
@@ -483,6 +498,7 @@ paths:
       description: "Delete existing Item Data, providing Item id in path  (**Admin Role Required!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -508,6 +524,7 @@ paths:
       description: "Get list of available Transactions, you can use query parameter to specify data querying rule"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/Limit"
         - $ref: "#/components/parameters/Page"
@@ -527,6 +544,7 @@ paths:
       description: "Create New Transaction Data, providing Transaction information in document body"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -549,6 +567,7 @@ paths:
       description: "Get Transaction data by specifying transaction Object ID"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -567,6 +586,7 @@ paths:
       description: "Update existing Transaction Data, providing Transaction information in document body  (**Only draft transaction can be udpated!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       requestBody:
@@ -592,6 +612,7 @@ paths:
       description: "Delete existing Transaction Data, providing Transaction id in path  (**Only draft transaction can be deleted!**)"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ID"
       responses:
@@ -617,6 +638,7 @@ paths:
       description: "Download transaction report (xlsx format) of specific range of time"
       security:
         - cookieAuth: []
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/startDate"
         - $ref: "#/components/parameters/endDate"
@@ -932,6 +954,10 @@ components:
       type: apiKey
       in: cookie
       name: accessToken
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
   parameters:
     ID:

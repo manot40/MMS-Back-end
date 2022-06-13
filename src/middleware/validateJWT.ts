@@ -16,7 +16,7 @@ const validateJWT = async (
     get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
 
   const refreshToken =
-    req.cookies.refreshToken || get(req, "headers.refreshToken", "");
+    req.cookies.refreshToken || get(req, "headers.refreshtoken", "");
 
   if (!accessToken) return next();
 

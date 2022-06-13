@@ -20,7 +20,7 @@ import { createLogin } from "../services/user.service";
 export async function createUserSessionHandler(req: Request, res: Response) {
   // validate the email and password
   const user = (await createLogin(req.body)) as any;
-  const remember: boolean = req.body.rememberMe;
+  const remember = req.body.rememberMe + "" == "true";
 
   if (!user) {
     return res.status(401).send(msg(401, {}, "Username atau password salah!"));
@@ -51,6 +51,8 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     refreshToken = sign(session, { expiresIn: config.refreshTokenTTL });
     res.cookie("refreshToken", refreshToken, {
       ...cookieConfig,
+      httpOnly: false,
+      sameSite: "lax",
       maxAge: ms(config.refreshTokenTTL),
     });
   }
@@ -74,7 +76,9 @@ export async function invalidateUserSessionHandler(
 }
 
 export async function refreshAccessToken(req: Request, res: Response) {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken =
+    req.cookies.refreshToken || get(req, "headers.refreshtoken", "");
+
   await reIssueAccessToken(refreshToken)
     .then((accessToken) => {
       if (!accessToken) {
