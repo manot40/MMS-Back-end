@@ -19,6 +19,7 @@ export async function createUserHandler(req: Request, res: Response) {
 export async function getUserInformationHandler(req: Request, res: Response) {
   const { _id } = get(req, 'user');
   await findUser({ _id }, '-password')
+    .cache({ key: `user-${_id}` })
     .then((data) => {
       return res.send(msg(200, data));
     })

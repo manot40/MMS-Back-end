@@ -23,7 +23,7 @@ export default class Server {
   private server: http.Server;
 
   constructor() {
-    cluster.isPrimary && log.info(`(Express) Main Process running in PID: ${process.pid}`);
+    cluster.isPrimary && log.info(`(Express) Main Process running in PID ${process.pid} with ${config.env} env`);
     config.enableCluster ? this.setupCluster() : this.setupApp();
   }
 

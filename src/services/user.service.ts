@@ -2,18 +2,18 @@ import { omit } from 'lodash';
 import { SchemaDefinition, FilterQuery } from 'mongoose';
 import User, { UserDocument } from '../models/user.model';
 
-export async function createUser(input: SchemaDefinition<UserDocument>) {
-  return await User.create(input).catch((err) => {
+export function createUser(input: SchemaDefinition<UserDocument>) {
+  return User.create(input).catch((err) => {
     throw new Error(err);
   });
 }
 
-export async function findUser(query: FilterQuery<UserDocument>, selection: string) {
+export function findUser(query: FilterQuery<UserDocument>, selection: string) {
   return User.findOne(query).lean().select(selection);
 }
 
-export async function checkAdminRole(id: string) {
-  return await User.exists({ _id: id, role: 'admin' });
+export function checkAdminRole(id: string) {
+  return User.exists({ _id: id, role: 'admin' });
 }
 
 export async function createLogin({ username, password }: { username: UserDocument['username']; password: string }) {
