@@ -16,7 +16,7 @@ export default class db {
         log.warn('(Database) Disconnected from database unexpectedly');
         log.info('(Database) Trying to reconnect to MongoDB...');
         this.isStoppedUnexpectedly = true;
-        mongoose.disconnect().then(() => db.connect());
+        mongoose.disconnect().then(() => this.connect());
       }
     });
 
