@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 import log from '../helpers/pino';
 import config from '../config/database';
-import process from 'process';
 
-const dbUrl =
-  process.env.NODE_ENV == 'production'
-    ? `mongodb://${config.dbUsername}:${config.dbPassword}@${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`
-    : `mongodb://${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`;
+const credStr = !config.dbUsername || !config.dbPassword ? '' : `${config.dbUsername}:${config.dbPassword}@`;
+
+const dbUrl = `mongodb://${credStr}${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`;
 
 export default class db {
   private static isGracefullyStopped: boolean;
