@@ -9,8 +9,8 @@ const dbUrl =
     : `mongodb://${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`;
 
 export default class db {
-  static isGracefullyStopped: boolean;
-  static isStoppedUnexpectedly: boolean;
+  private static isGracefullyStopped: boolean;
+  private static isStoppedUnexpectedly: boolean;
 
   private static watch() {
     mongoose.connection.on('disconnected', () => {
@@ -23,7 +23,8 @@ export default class db {
     });
 
     mongoose.connection.on('open', () => {
-      this.isStoppedUnexpectedly = false;
+      this.isGracefullyStopped = false;
+      this.isStoppedUnexpectedly = undefined;
       log.info(`(MongoDB) Connected to ${config.dbHost}`);
     });
   }
