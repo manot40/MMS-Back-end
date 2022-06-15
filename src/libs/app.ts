@@ -68,7 +68,6 @@ export default class Server {
     this.app.use(json());
 
     // Logger
-    config.env == 'development' && this.app.use(morgan);
     this.app.use(morgan);
 
     // Custom Middleware
