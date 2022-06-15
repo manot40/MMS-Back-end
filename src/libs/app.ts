@@ -9,6 +9,7 @@ import express, { urlencoded, json } from 'express';
 
 // Config and Helpers utility
 import db from './db';
+import morgan from './morgan';
 import useRedis from './cache';
 import log from '../helpers/pino';
 import config from '../config/app';
@@ -65,6 +66,10 @@ export default class Server {
     this.app.use(cookieParser());
     this.app.use(compression());
     this.app.use(json());
+
+    // Logger
+    config.env == 'development' && this.app.use(morgan);
+    this.app.use(morgan);
 
     // Custom Middleware
     this.app.use(deserializeUser);
