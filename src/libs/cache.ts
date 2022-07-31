@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import Redis from 'ioredis';
 
-import config from '../config/cache';
 import log from '../helpers/pino';
+
+const redisURL = process.env.REDIS_URL;
 
 let redis: Redis;
 
@@ -15,7 +16,7 @@ mongoose.Query.prototype.cache = function (options: CacheOptions = {}) {
 };
 
 mongoose.Query.prototype.exec = async function () {
-  if (!this.useCache || !config.host) {
+  if (!this.useCache || !redisURL) {
     return exec.apply(this, arguments);
   }
 
@@ -50,16 +51,11 @@ export function clearCache(key: string, callback?: () => void) {
 }
 
 export default function useRedis() {
-  if (config.host) {
-    redis = new Redis({
-      host: config.host,
-      port: config.port,
-      username: config.username,
-      password: config.password,
-    });
+  if (redisURL) {
+    redis = new Redis(redisURL);
 
     redis.on('ready', () => {
-      log.info(`(Redis) Connected to ${config.host}`);
+      log.info(`(Redis) Connected to redis caching service`);
     });
 
     redis.on('close', () => {
