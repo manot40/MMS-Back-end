@@ -1,5 +1,6 @@
+README*
 .vscode
-.env
+.env*
 
 build/**/*
 dist/**/*
