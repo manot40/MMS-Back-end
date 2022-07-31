@@ -12,14 +12,14 @@
     "start": "node dist",
     "clean": "tsc --build --clean",
     "format": "prettier --write \"./src/**/*.{ts,d.ts}\"",
-    "check-types": "tsc --noEmit",
-    "check-format": "prettier --check \"./src/**/*.{ts,d.ts}\""
+    "check:types": "tsc --noEmit",
+    "check:format": "prettier --check \"./src/**/*.{ts,d.ts}\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -43,7 +43,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",
     "@types/config": "0.0.39",
