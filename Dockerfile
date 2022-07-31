@@ -16,11 +16,10 @@ FROM node:16-slim as builder
 WORKDIR /usr/builder/portal-backend
 
 COPY ./package.json ./
-COPY ./package-lock.json ./
 
 RUN apt update && apt upgrade -y
 
-RUN npm ci
+RUN npm install
 COPY ./ .
 
 RUN npm run build
