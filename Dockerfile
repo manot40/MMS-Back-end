@@ -13,13 +13,15 @@ ARG JWT_REFRESHTOKEN_TTL='2w'
 # Build the app
 FROM node:16-slim as builder
 
-WORKDIR /usr/builder/portal-backend
+WORKDIR /usr/builder/mms-backend
 
 COPY ./package.json ./
+COPY ./pnpm-lock.yaml ./
 
 RUN apt update && apt upgrade -y
+RUN npm -g install pnpm
 
-RUN npm install
+RUN pnpm install
 COPY ./ .
 
 RUN npm run build
@@ -37,7 +39,7 @@ ARG JWT_PRIVATE_KEY
 ARG JWT_ACCESSTOKEN_TTL
 ARG JWT_REFRESHTOKEN_TTL
 
-WORKDIR /usr/app/portal-backend
+WORKDIR /usr/app/mms-backend
 
 ENV NODE_ENV=production
 
@@ -51,14 +53,15 @@ ENV JWT_PRIVATE_KEY $JWT_PRIVATE_KEY
 ENV JWT_ACCESSTOKEN_TTL $JWT_ACCESSTOKEN_TTL
 ENV JWT_REFRESHTOKEN_TTL $JWT_REFRESHTOKEN_TTL
 
-RUN apt update && apt upgrade -y && \
-  apt install libssl1.1 libssl-dev ca-certificates -y
+RUN apt update && apt upgrade -y
+RUN npm -g install pnpm
 
-COPY --from=builder /usr/builder/portal-backend/package-lock.json ./package-lock.json
-COPY --from=builder /usr/builder/portal-backend/package.json ./package.json
-COPY --from=builder /usr/builder/portal-backend/dist ./dist
+COPY --from=builder /usr/builder/mms-backend/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /usr/builder/mms-backend/package.json ./package.json
+COPY --from=builder /usr/builder/mms-backend/public ./public
+COPY --from=builder /usr/builder/mms-backend/dist ./dist
 
-RUN npm ci --omit=dev
+RUN pnpm install --prod
 
 EXPOSE 6900
 CMD ["node", "dist"]
