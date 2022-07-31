@@ -1,8 +1,8 @@
 .vscode
 .env
 
-.build/**/*
-.dist/**/*
+build/**/*
+dist/**/*
 
 .gcloudignore
 Procfile

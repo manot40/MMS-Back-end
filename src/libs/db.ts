@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 import log from '../helpers/pino';
-import config from '../config/database';
 
-const credStr = !config.dbUsername || !config.dbPassword ? '' : `${config.dbUsername}:${config.dbPassword}@`;
-
-const dbUrl = `mongodb://${credStr}${config.dbHost}/${config.dbName}?retryWrites=true&w=majority`;
+const dbUrl = process.env.DATABASE_URL;
 
 export default class db {
   private static isGracefullyStopped: boolean;
@@ -23,7 +20,7 @@ export default class db {
     mongoose.connection.on('open', () => {
       this.isGracefullyStopped = false;
       this.isStoppedUnexpectedly = undefined;
-      log.info(`(MongoDB) Connected to ${config.dbHost}`);
+      log.info('(MongoDB) Connected to database');
     });
   }
 
